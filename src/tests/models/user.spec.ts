@@ -1,4 +1,5 @@
-import { User, UserType } from '../../models/user'
+import { User } from '../../models/user'
+import jwt from 'jsonwebtoken'
 import supertest from 'supertest'
 import app from '../../index'
 
@@ -17,11 +18,17 @@ describe('User Model', () => {
     it('User Create Defined', () => {
       expect(user.create).toBeDefined()
     })
+    it('User Update Defined', () => {
+      expect(user.update).toBeDefined()
+    })
     it('User Show Defined', () => {
       expect(user.show).toBeDefined()
     })
     it('User Delete Defined', () => {
       expect(user.delete).toBeDefined()
+    })
+    it('User Login Defined', () => {
+      expect(user.login).toBeDefined()
     })
   })
   describe('End Point Check', () => {
@@ -30,18 +37,18 @@ describe('User Model', () => {
       password: '123456',
       fullname: 'Mohamed Saied - Test Env'
     }
-
-    it('/users | All Users', async () => {
-      const response = await request.get('/users')
-      expect(response.status).toBe(200)
-    })
+    var tempToken = jwt.sign({ user: DummyData }, process.env.TOKEN_SECRET as string)
     it('/users | Create User', async () => {
       const response = await request.post('/users').send(DummyData)
       expect(response.status).toBe(200)
     })
+    it('/users | All Users', async () => {
+      const response = await request.get('/users').set('Authorization', `Bearer ${tempToken}`)
+      expect(response.status).toBe(200)
+    })
 
     it('/users/:id | Show User', async () => {
-      const response = await request.get('/users/1')
+      const response = await request.get('/users/1').set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
       expect(response.body.username).toBe('Test User Name')
       expect(response.body.fullname).toBe('Mohamed Saied - Test Env')

@@ -1,8 +1,7 @@
 import express, { Application, Request, Response } from 'express'
 import morgan from 'morgan'
 import * as dotenv from 'dotenv'
-import user_routes from './handler/user'
-import * as bcrypt from 'bcrypt'
+import user_routes from './routeHandler/user'
 import bodyParser from 'body-parser'
 
 dotenv.config()
@@ -17,7 +16,7 @@ app.use(morgan('short'))
 user_routes(app)
 // start express server
 app.listen(PORT, () => {
-  console.log(`Server is starting at prot:${PORT}`)
+  console.log(`Server Work On 127.0.0.1:${PORT}`)
 })
 
 export default app

@@ -96,12 +96,12 @@ var User = /** @class */ (function () {
     };
     User.prototype.create = function (user) {
         return __awaiter(this, void 0, void 0, function () {
-            var username, password, fullName, pepper, salt, Hash, conn, sql, result, error_3;
+            var username, password, fullname, pepper, salt, Hash, conn, sql, result, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        username = user.username, password = user.password, fullName = user.fullName;
+                        username = user.username, password = user.password, fullname = user.fullname;
                         pepper = process.env.BCRYPT_PASSWORD;
                         salt = parseInt(process.env.SALT_ROUNDS);
                         Hash = bcrypt_1.default.hashSync(password + pepper, salt);
@@ -109,7 +109,7 @@ var User = /** @class */ (function () {
                     case 1:
                         conn = _a.sent();
                         sql = 'INSERT INTO users (username,password,fullname) VALUES ($1,$2,$3) RETURNING *;';
-                        return [4 /*yield*/, conn.query(sql, [username, Hash, fullName])];
+                        return [4 /*yield*/, conn.query(sql, [username, Hash, fullname])];
                     case 2:
                         result = _a.sent();
                         conn.release();
@@ -122,9 +122,38 @@ var User = /** @class */ (function () {
             });
         });
     };
+    User.prototype.update = function (user) {
+        return __awaiter(this, void 0, void 0, function () {
+            var id, username, password, fullname, pepper, salt, Hash, conn, sql, result, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        id = user.id, username = user.username, password = user.password, fullname = user.fullname;
+                        console.log(user);
+                        pepper = process.env.BCRYPT_PASSWORD;
+                        salt = parseInt(process.env.SALT_ROUNDS);
+                        Hash = bcrypt_1.default.hashSync(password + pepper, salt);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = 'UPDATE users SET username = $1 , password = $2 , fullname = $3 WHERE id = $4 RETURNING *;';
+                        return [4 /*yield*/, conn.query(sql, [username, Hash, fullname, id])];
+                    case 2:
+                        result = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 3:
+                        error_4 = _a.sent();
+                        throw new Error('Update Method Error ' + error_4);
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     User.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, error_4;
+            var conn, sql, result, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -139,8 +168,32 @@ var User = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, 'User Deleted Successfully'];
                     case 3:
-                        error_4 = _a.sent();
-                        throw new Error('Delete Method Error ' + error_4);
+                        error_5 = _a.sent();
+                        throw new Error('Delete Method Error ' + error_5);
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    User.prototype.login = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, result, error_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = 'DELETE FROM users WHERE id = $1';
+                        return [4 /*yield*/, conn.query(sql, [id])];
+                    case 2:
+                        result = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 3:
+                        error_6 = _a.sent();
+                        throw new Error('Login Method Error ' + error_6);
                     case 4: return [2 /*return*/];
                 }
             });

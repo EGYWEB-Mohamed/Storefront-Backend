@@ -1,13 +1,7 @@
 import client from '../database'
 import bcrypt from 'bcrypt'
 import { error } from 'console'
-
-export type UserType = {
-  id: number
-  username: string
-  password: string
-  fullname: string
-}
+import { LoginType, UserType } from '../utilities/Types'
 
 const SALT = parseInt(process.env.SALT_ROUND as string) as number
 
@@ -52,18 +46,20 @@ export class User {
   }
   async update(user: UserType): Promise<UserType> {
     try {
-      const { username, password, fullname } = user
+      const { id, username, password, fullname } = user
+
       const pepper: string = process.env.BCRYPT_PASSWORD as string
       const salt: number = parseInt(process.env.SALT_ROUNDS as string)
       const Hash = bcrypt.hashSync(password + pepper, salt)
 
       const conn = await client.connect()
-      const sql = 'INSERT INTO users (username,password,fullname) VALUES ($1,$2,$3) RETURNING *;'
-      const result = await conn.query(sql, [username, Hash, fullname])
+      const sql =
+        'UPDATE users SET username = $1 , password = $2 , fullname = $3 WHERE id = $4 RETURNING *;'
+      const result = await conn.query(sql, [username, Hash, fullname, id])
       conn.release()
       return result.rows[0]
     } catch (error) {
-      throw new Error('Create Method Error ' + error)
+      throw new Error('Update Method Error ' + error)
     }
   }
 
@@ -77,5 +73,19 @@ export class User {
     } catch (error) {
       throw new Error('Delete Method Error ' + error)
     }
+  }
+
+  async login(ParmsLogin: LoginType): Promise<UserType | boolean> {
+    const conn = await client.connect()
+    const sql = 'SELECT * FROM users WHERE username=($1)'
+    const result = await conn.query(sql, [ParmsLogin.username])
+    conn.release()
+    const user = result.rows[0]
+    console.log(user)
+    const pepper: string = process.env.BCRYPT_PASSWORD as string
+    if (bcrypt.compareSync(ParmsLogin.password + pepper, user.password)) {
+      return user
+    }
+    return false
   }
 }

@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var user_1 = require("../../models/user");
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var supertest_1 = __importDefault(require("supertest"));
 var index_1 = __importDefault(require("../../index"));
 var dotenv_1 = __importDefault(require("dotenv"));
@@ -55,31 +56,26 @@ describe('User Model', function () {
         it('User Create Defined', function () {
             expect(user.create).toBeDefined();
         });
+        it('User Update Defined', function () {
+            expect(user.update).toBeDefined();
+        });
         it('User Show Defined', function () {
             expect(user.show).toBeDefined();
         });
         it('User Delete Defined', function () {
             expect(user.delete).toBeDefined();
         });
+        it('User Login Defined', function () {
+            expect(user.login).toBeDefined();
+        });
     });
     describe('End Point Check', function () {
         var DummyData = {
             username: 'Test User Name',
             password: '123456',
-            fullName: 'Mohamed Saied - Test Env'
+            fullname: 'Mohamed Saied - Test Env'
         };
-        it('/users | All Users', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get('/users')];
-                    case 1:
-                        response = _a.sent();
-                        expect(response.status).toBe(200);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
+        var tempToken = jsonwebtoken_1.default.sign({ user: DummyData }, process.env.TOKEN_SECRET);
         it('/users | Create User', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
@@ -92,11 +88,23 @@ describe('User Model', function () {
                 }
             });
         }); });
+        it('/users | All Users', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request.get('/users').set('Authorization', "Bearer ".concat(tempToken))];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(200);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
         it('/users/:id | Show User', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get('/users/1')];
+                    case 0: return [4 /*yield*/, request.get('/users/1').set('Authorizations', "Bearer ".concat(tempToken))];
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);

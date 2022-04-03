@@ -25,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var morgan_1 = __importDefault(require("morgan"));
 var dotenv = __importStar(require("dotenv"));
-var user_1 = __importDefault(require("./handler/user"));
+var user_1 = __importDefault(require("./routeHandler/user"));
 var body_parser_1 = __importDefault(require("body-parser"));
 dotenv.config();
 var PORT = process.env.PORT || 3000;
@@ -38,6 +38,6 @@ app.use((0, morgan_1.default)('short'));
 (0, user_1.default)(app);
 // start express server
 app.listen(PORT, function () {
-    console.log("Server is starting at prot:".concat(PORT));
+    console.log("Server Work On 127.0.0.1:".concat(PORT));
 });
 exports.default = app;
