@@ -398,3 +398,39 @@ These are the notes from a meeting with the frontend developer that describe wha
     ```
 
 - [OPTIONAL] Completed Orders by user [args: user id](token required)
+
+## Data Schema
+
+### Products Schema
+
+```sql
+CREATE TABLE products(
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    price NUMERIC(5,2) NOT NULL
+);
+```
+
+### Users Schema
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY Key,
+    username VARCHAR(255),
+    password text,
+    fullname text
+);
+```
+
+### Orders Schema
+
+```sql
+CREATE TABLE orders(
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    quantity INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
