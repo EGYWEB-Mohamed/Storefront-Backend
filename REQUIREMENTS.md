@@ -271,3 +271,129 @@ These are the notes from a meeting with the frontend developer that describe wha
     ```text
     JWT-Token
     ```
+
+### Orders
+
+- Index - **`token required`**
+
+  - HTTP verb `GET`
+  - Endpoint:- `/api/orders`
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `Array of order objects & Product & User Details`
+
+    ```json
+    [
+      {
+        "id": 1,
+        "product_id": 1,
+        "title": "Test Product",
+        "unit_price": "9.99",
+        "user_id": 1,
+        "fullname": "Mohamed Saied",
+        "quantity": 1,
+        "total_price": "9.99"
+      }
+    ]
+    ```
+
+- Show - **`token required`**
+
+  - HTTP verb `GET`
+  - Endpoint:- `/api/orders/:id` - **id of the order to be retrieved**
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `Order object`
+
+    ```json
+    {
+      "id": 1,
+      "product_id": 1,
+      "title": "Test Product",
+      "unit_price": "9.99",
+      "user_id": 1,
+      "fullname": "Mohamed Saied",
+      "quantity": 1,
+      "total_price": "9.99"
+    }
+    ```
+
+- Create **`token required`**
+
+  - HTTP verb `POST`
+  - Endpoint:- `/api/orders`
+  - Request Body
+
+    ```json
+    {
+      "product_id": 1,
+      "quantity": 3,
+      "user_id": 1
+    }
+    ```
+
+  - Response Body -- `Order object`
+
+    ```json
+    {
+      "id": 4,
+      "product_id": 1,
+      "quantity": 3,
+      "user_id": 1
+    }
+    ```
+
+- Delete **`token required`**
+
+  - HTTP verb `DELETE`
+  - Endpoint:- `/api/orders/:id` - **id of the order to be deleted**
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `Deleted Order Message`
+
+    ```text
+    Order Deleted Successfully
+    ```
+
+- Edit **`token required`**
+
+  - HTTP verb `PUT`
+  - Endpoint:- `/api/orders/:id`
+  - Request Body
+
+    ```json
+    {
+      "product_id": 1,
+      "quantity": 1,
+      "user_id": 1
+    }
+    ```
+
+  - Response Body -- `Updated Order object`
+
+    ```json
+    {
+      "id": 1,
+      "product_id": 1,
+      "title": "Test Product",
+      "unit_price": "9.99",
+      "user_id": 1,
+      "fullname": "Mohamed Saied",
+      "quantity": 7,
+      "total_price": "69.93"
+    }
+    ```
+
+- [OPTIONAL] Completed Orders by user [args: user id](token required)
