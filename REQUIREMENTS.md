@@ -8,8 +8,9 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 - [API and Database Requirements](#api-and-database-requirements)
   - [API Endpoints](#api-endpoints)
-    - [Products](#products)
+    - [Authenticate](#Authenticate)
     - [Users](#users)
+    - [Products](#products)
     - [Orders](#orders)
   - [Data Schema](#data-schema)
     - [Products Schema](#products-schema)
@@ -17,6 +18,153 @@ These are the notes from a meeting with the frontend developer that describe wha
     - [Orders Schema](#orders-schema)
 
 ## API Endpoints
+
+### Authenticate
+
+- Login
+
+  - HTTP verb `POST`
+  - Endpoint:- `/api/login`
+  - Request Body
+
+    ```json
+    {
+      "username": "FWD-2",
+      "password": "0123456789"
+    }
+    ```
+
+  - Response Body -- `User object & Token`
+
+    ```json
+    {
+      "token": "....",
+      "user": {
+        "id": 3,
+        "username": "FWD-2",
+        "password": "$2b$10$hCrcs/rWZRf2YzTjbviL4e96sJTISjlAJD.dVWCTd5I4P1DIrj0Si",
+        "fullname": "Ahmed Said "
+      }
+    }
+    ```
+
+- Register
+
+  - HTTP verb `POST`
+  - Endpoint:- `/api/register`
+  - Request Body
+
+    ```json
+    {
+      "username": "fwd",
+      "password": "123456",
+      "fullname": "Mohamed Saied"
+    }
+    ```
+
+  - Response Body -- `User Token Text`
+
+    ```text
+    JWT-Token
+    ```
+
+### Users
+
+- Index - **`token required`**
+
+  - HTTP verb `GET`
+  - Endpoint:- `/api/users/`
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `Array of User objects`
+
+    ```json
+    {
+      "id": 1,
+      "username": "fwd",
+      "fullname": "Mohamed Saied"
+    }
+    ```
+
+- Show **`token required`**
+
+  - HTTP verb `GET`
+  - Endpoint:- `/api/users/:id` - **id of the user to be retrieved**
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `User object`
+
+    ```json
+    {
+      "id": 1,
+      "username": "fwd",
+      "fullname": "Mohamed Saied"
+    }
+    ```
+
+- Create **`token required`**
+
+  - HTTP verb `POST`
+  - Endpoint:- `/api/users`
+  - Request Body
+
+    ```json
+    {
+      "username": "FWD-2",
+      "password": "123456789",
+      "fullname": "Ahmed Said"
+    }
+    ```
+
+  - Response Body -- `User object`
+
+    ```text
+    JWT-Token
+    ```
+
+- Delete **`token required`**
+
+  - HTTP verb `DELETE`
+  - Endpoint:- `/api/users/:id` - **id of the user to be deleted**
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `Deleted User Message`
+
+    ```text
+    User Deleted Successfully
+    ```
+
+- Edit **`token required`**
+
+  - HTTP verb `PUT`
+  - Endpoint:- `/api/users/:id`
+  - Request Body
+
+    ```json
+    {
+      "username": "FWD-2",
+      "password": "0123456789",
+      "fullname": "Ahmed Said "
+    }
+    ```
+
+  - Response Body -- `Updated User object`
+
+    ```text
+    JWT-Token
+    ```
 
 ### Products
 
@@ -124,153 +272,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 - **[OPTIONAL]** Top 5 most popular products
 - **[OPTIONAL]** Products by category (args: product category)
-
-### Users
-
-- Index - **`token required`**
-
-  - HTTP verb `GET`
-  - Endpoint:- `/api/users/`
-  - Request Body
-
-    ```json
-      N/A
-    ```
-
-  - Response Body -- `Array of User objects`
-
-    ```json
-    {
-      "id": 1,
-      "username": "fwd",
-      "fullname": "Mohamed Saied"
-    }
-    ```
-
-- Show **`token required`**
-
-  - HTTP verb `GET`
-  - Endpoint:- `/api/users/:id` - **id of the user to be retrieved**
-  - Request Body
-
-    ```json
-      N/A
-    ```
-
-  - Response Body -- `User object`
-
-    ```json
-    {
-      "id": 1,
-      "username": "fwd",
-      "fullname": "Mohamed Saied"
-    }
-    ```
-
-- Create **`token required`**
-
-  - HTTP verb `POST`
-  - Endpoint:- `/api/users`
-  - Request Body
-
-    ```json
-    {
-      "username": "FWD-2",
-      "password": "123456789",
-      "fullname": "Ahmed Said"
-    }
-    ```
-
-  - Response Body -- `User object`
-
-    ```text
-    JWT-Token
-    ```
-
-- Delete **`token required`**
-
-  - HTTP verb `DELETE`
-  - Endpoint:- `/api/users/:id` - **id of the user to be deleted**
-  - Request Body
-
-    ```json
-      N/A
-    ```
-
-  - Response Body -- `Deleted User Message`
-
-    ```text
-    User Deleted Successfully
-    ```
-
-- Edit **`token required`**
-
-  - HTTP verb `PATCH`
-  - Endpoint:- `/api/users/:id`
-  - Request Body
-
-    ```json
-    {
-      "username": "FWD-2",
-      "password": "0123456789",
-      "fullname": "Ahmed Said "
-    }
-    ```
-
-  - Response Body -- `Updated User object`
-
-    ```text
-    JWT-Token
-    ```
-
-### Authenticate
-
-- Login
-
-  - HTTP verb `POST`
-  - Endpoint:- `/api/login`
-  - Request Body
-
-    ```json
-    {
-      "username": "FWD-2",
-      "password": "0123456789"
-    }
-    ```
-
-  - Response Body -- `User object & Token`
-
-    ```json
-    {
-      "token": "....",
-      "user": {
-        "id": 3,
-        "username": "FWD-2",
-        "password": "$2b$10$hCrcs/rWZRf2YzTjbviL4e96sJTISjlAJD.dVWCTd5I4P1DIrj0Si",
-        "fullname": "Ahmed Said "
-      }
-    }
-    ```
-
-- Register
-
-  - HTTP verb `POST`
-  - Endpoint:- `/api/register`
-  - Request Body
-
-    ```json
-    {
-      "username": "fwd",
-      "password": "123456",
-      "fullname": "Mohamed Saied"
-    }
-    ```
-
-  - Response Body -- `User Token Text`
-
-    ```text
-    JWT-Token
-    ```
 
 ### Orders
 
