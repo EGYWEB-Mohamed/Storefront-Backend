@@ -12,10 +12,12 @@ These are the notes from a meeting with the frontend developer that describe wha
     - [Users](#users)
     - [Products](#products)
     - [Orders](#orders)
+    - [Order Products](#order-Products)
   - [Data Schema](#data-schema)
     - [Products Schema](#products-schema)
     - [Users Schema](#users-schema)
     - [Orders Schema](#orders-schema)
+    - [Order Products Schema](#Order-Products-Schema)
 
 ## API Endpoints
 
@@ -285,19 +287,15 @@ These are the notes from a meeting with the frontend developer that describe wha
       N/A
     ```
 
-  - Response Body -- `Array of order objects & Product & User Details`
+  - Response Body -- `Array of Order Objects`
 
     ```json
     [
       {
-        "id": 1,
-        "product_id": 1,
-        "title": "Test Product",
-        "unit_price": "9.99",
-        "user_id": 1,
-        "fullname": "Mohamed Saied",
-        "quantity": 1,
-        "total_price": "9.99"
+        "id": 7,
+        "status": "active",
+        "username": "fwd",
+        "fullname": "Mohamed Saied"
       }
     ]
     ```
@@ -312,18 +310,36 @@ These are the notes from a meeting with the frontend developer that describe wha
       N/A
     ```
 
-  - Response Body -- `Order object`
+  - Response Body -- `Order object With Products Array Object`
 
     ```json
     {
-      "id": 1,
-      "product_id": 1,
-      "title": "Test Product",
-      "unit_price": "9.99",
-      "user_id": 1,
-      "fullname": "Mohamed Saied",
-      "quantity": 1,
-      "total_price": "9.99"
+      "order": {
+        "id": 7,
+        "status": "active",
+        "username": "fwd",
+        "fullname": "Mohamed Saied"
+      },
+      "products": [
+        {
+          "id": 3,
+          "order_id": 7,
+          "quantity": 5,
+          "status": "active",
+          "title": "Test Title",
+          "unit_price": "5.00",
+          "total_price": "25.00"
+        },
+        {
+          "id": 1,
+          "order_id": 7,
+          "quantity": 1,
+          "status": "active",
+          "title": "Test Title",
+          "unit_price": "5.00",
+          "total_price": "5.00"
+        }
+      ]
     }
     ```
 
@@ -335,9 +351,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 
     ```json
     {
-      "product_id": 1,
-      "quantity": 3,
-      "user_id": 1
+      "status": "active",
+      "user_id": 2
     }
     ```
 
@@ -345,10 +360,9 @@ These are the notes from a meeting with the frontend developer that describe wha
 
     ```json
     {
-      "id": 4,
-      "product_id": 1,
-      "quantity": 3,
-      "user_id": 1
+      "id": 9,
+      "user_id": 2,
+      "status": "active"
     }
     ```
 
@@ -376,8 +390,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 
     ```json
     {
-      "product_id": 1,
-      "quantity": 1,
+      "status": "complete",
       "user_id": 1
     }
     ```
@@ -386,18 +399,135 @@ These are the notes from a meeting with the frontend developer that describe wha
 
     ```json
     {
-      "id": 1,
-      "product_id": 1,
-      "title": "Test Product",
-      "unit_price": "9.99",
-      "user_id": 1,
-      "fullname": "Mohamed Saied",
-      "quantity": 7,
-      "total_price": "69.93"
+      "id": 7,
+      "status": "complete",
+      "username": "fwd",
+      "fullname": "Mohamed Saied"
     }
     ```
 
 - [OPTIONAL] Completed Orders by user [args: user id](token required)
+
+### Order Products
+
+- Index - **`token required`**
+
+  - HTTP verb `GET`
+  - Endpoint:- `/api/order-products`
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `Array of Order Products Objects`
+
+    ```json
+    [
+      {
+        "id": 1,
+        "order_id": 7,
+        "quantity": 1,
+        "status": "active",
+        "title": "Test Title",
+        "unit_price": "5.00",
+        "total_price": "5.00"
+      }
+    ]
+    ```
+
+- Show - **`token required`**
+
+  - HTTP verb `GET`
+  - Endpoint:- `/api/order-products/:id` - **id of the order to be retrieved**
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `Order Products object`
+
+    ```json
+    {
+      "id": 1,
+      "order_id": 7,
+      "quantity": 1,
+      "status": "active",
+      "title": "Test Title",
+      "unit_price": "5.00",
+      "total_price": "5.00"
+    }
+    ```
+
+- Create **`token required`**
+
+  - HTTP verb `POST`
+  - Endpoint:- `/api/order-products`
+  - Request Body
+
+    ```json
+    {
+      "order_id": 7,
+      "product_id": 1,
+      "quantity": 3
+    }
+    ```
+
+  - Response Body -- `Order object`
+
+    ```json
+    {
+      "id": 4,
+      "order_id": 7,
+      "product_id": 1,
+      "quantity": 3
+    }
+    ```
+
+- Delete **`token required`**
+
+  - HTTP verb `DELETE`
+  - Endpoint:- `/api/order-products/:id` - **id of the order to be deleted**
+  - Request Body
+
+    ```json
+      N/A
+    ```
+
+  - Response Body -- `Deleted Order Message`
+
+    ```text
+    Order Product Deleted Successfully
+    ```
+
+- Edit **`token required`**
+
+  - HTTP verb `PUT`
+  - Endpoint:- `/api/order-products/:id`
+  - Request Body
+
+    ```json
+    {
+      "order_id": 7,
+      "product_id": 1,
+      "quantity": 3
+    }
+    ```
+
+  - Response Body -- `Updated Order object`
+
+    ```json
+    {
+      "id": 3,
+      "order_id": 7,
+      "quantity": 5,
+      "status": "active",
+      "title": "Test Title",
+      "unit_price": "5.00",
+      "total_price": "25.00"
+    }
+    ```
 
 ## Data Schema
 
@@ -427,10 +557,21 @@ CREATE TABLE users (
 ```sql
 CREATE TABLE orders(
     id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    status VARCHAR(255) NOT NULL
+);
+```
+
+### Order Products Schema
+
+```sql
+CREATE TABLE order_products(
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE ON UPDATE CASCADE,
     product_id INTEGER NOT NULL,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    quantity INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    quantity INTEGER NOT NULL
 );
 ```
