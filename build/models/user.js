@@ -161,7 +161,7 @@ var User = /** @class */ (function () {
     };
     User.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, error_5;
+            var conn, sql, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -172,7 +172,7 @@ var User = /** @class */ (function () {
                         sql = 'DELETE FROM users WHERE id = $1';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
-                        result = _a.sent();
+                        _a.sent();
                         conn.release();
                         return [2 /*return*/, 'User Deleted Successfully'];
                     case 3:

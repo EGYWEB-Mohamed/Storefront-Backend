@@ -119,7 +119,7 @@ var Order = /** @class */ (function () {
     };
     Order.prototype.update = function (order) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, id, product_id, quantity, user_id, checkIfOrderCount, sql, result, returnUpdated, error_4;
+            var conn, id, product_id, quantity, user_id, checkIfOrderCount, sql, returnUpdated, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, database_1.default.connect()];
@@ -137,7 +137,7 @@ var Order = /** @class */ (function () {
                         sql = 'UPDATE orders SET product_id = $1 , quantity = $2 , user_id = $3 WHERE id = $4;';
                         return [4 /*yield*/, conn.query(sql, [product_id, quantity, user_id, id])];
                     case 5:
-                        result = _a.sent();
+                        _a.sent();
                         return [4 /*yield*/, conn.query('SELECT orders.id, product_id, products.title, products.price as unit_price,user_id,users.fullname,quantity, (products.price * quantity) as total_price FROM orders INNER join products ON orders.product_id = products.id INNER join users ON orders.user_id = users.id WHERE orders.id = $1', [id])];
                     case 6:
                         returnUpdated = _a.sent();
@@ -153,7 +153,7 @@ var Order = /** @class */ (function () {
     };
     Order.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, error_5;
+            var conn, sql, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -164,7 +164,7 @@ var Order = /** @class */ (function () {
                         sql = 'DELETE FROM orders WHERE id = $1;';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
-                        result = _a.sent();
+                        _a.sent();
                         conn.release();
                         return [2 /*return*/, 'Order Deleted Successfully'];
                     case 3:
