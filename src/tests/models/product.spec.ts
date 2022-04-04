@@ -44,7 +44,7 @@ describe('Product Model', () => {
       password: '123456',
       fullname: 'Mohamed Saied - Test Env'
     }
-    var tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
+    const tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
 
     it('/api/products | All Products', async () => {
       const response = await request

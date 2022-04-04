@@ -52,7 +52,7 @@ describe('Product Model', () => {
       title: 'Product Title',
       price: 5.5
     }
-    var tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
+    const tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
     const user = new User()
     const product = new Product()
 

@@ -1,4 +1,3 @@
-import validator from 'validator'
 import client from '../database'
 
 import { LoginType, UserType, ProductType, OrderType } from './Types'

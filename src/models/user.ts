@@ -72,7 +72,7 @@ export class User {
     try {
       const conn = await client.connect()
       const sql = 'DELETE FROM users WHERE id = $1'
-      const result = await conn.query(sql, [id])
+      await conn.query(sql, [id])
       conn.release()
       return 'User Deleted Successfully'
     } catch (error) {

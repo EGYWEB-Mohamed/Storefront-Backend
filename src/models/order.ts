@@ -49,7 +49,7 @@ export class Order {
       try {
         const sql =
           'UPDATE orders SET product_id = $1 , quantity = $2 , user_id = $3 WHERE id = $4;'
-        const result = await conn.query(sql, [product_id, quantity, user_id, id])
+        await conn.query(sql, [product_id, quantity, user_id, id])
         const returnUpdated = await conn.query(
           'SELECT orders.id, product_id, products.title, products.price as unit_price,user_id,users.fullname,quantity, (products.price * quantity) as total_price FROM orders INNER join products ON orders.product_id = products.id INNER join users ON orders.user_id = users.id WHERE orders.id = $1',
           [id]
@@ -67,7 +67,7 @@ export class Order {
     try {
       const conn = await client.connect()
       const sql = 'DELETE FROM orders WHERE id = $1;'
-      const result = await conn.query(sql, [id])
+      await conn.query(sql, [id])
       conn.release()
       return 'Order Deleted Successfully'
     } catch (error) {

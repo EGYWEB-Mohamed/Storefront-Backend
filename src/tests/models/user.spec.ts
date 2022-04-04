@@ -44,7 +44,7 @@ describe('User Model', () => {
       fullname: 'Mohamed Saied - Test Env'
     }
 
-    var tempToken = jwt.sign({ user: DummyData }, process.env.TOKEN_SECRET as string)
+    const tempToken = jwt.sign({ user: DummyData }, process.env.TOKEN_SECRET as string)
 
     it('/api/users | All Users', async () => {
       const response = await request.get('/api/users').set('Authorization', `Bearer ${tempToken}`)

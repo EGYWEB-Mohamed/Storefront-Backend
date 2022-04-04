@@ -28,7 +28,7 @@ const createUser = async (req: Request, res: Response) => {
       fullname: req.body.fullname
     }
     const results = await user.create(dataBody)
-    var token = jwt.sign({ user: results }, process.env.TOKEN_SECRET as string)
+    const token = jwt.sign({ user: results }, process.env.TOKEN_SECRET as string)
     res.send(token)
   } else {
     res.status(400).json(validate)
@@ -45,7 +45,7 @@ const updateUser = async (req: Request, res: Response) => {
     }
     const results = await user.update(dataBody)
     if (results) {
-      var token = jwt.sign({ user: results }, process.env.TOKEN_SECRET as string)
+      const token = jwt.sign({ user: results }, process.env.TOKEN_SECRET as string)
       res.send(token)
     } else {
       res.json('Account Not Found ')

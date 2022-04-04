@@ -60,7 +60,7 @@ export class Product {
     try {
       const conn = await client.connect()
       const sql = 'DELETE FROM products WHERE id = $1;'
-      const result = await conn.query(sql, [id])
+      await conn.query(sql, [id])
       conn.release()
       return 'Product Deleted Successfully'
     } catch (error) {
