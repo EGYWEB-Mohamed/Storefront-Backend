@@ -11,8 +11,6 @@ By : Mohamed Said
 
 ## Getting Started
 
----
-
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Install Packages
@@ -52,28 +50,29 @@ TOKEN_SECRET=add-random-secret-here
 ```
 
 ### DB Configurations
+
 We shall create the dev and test database.
 
 - connect to the default postgres database as the server's root user `psql -U postgres`
-- In psql run the following to create a user 
-    - `CREATE USER storeDB WITH PASSWORD 'password123';`
+- In psql run the following to create a user
+  - `CREATE USER storeDB WITH PASSWORD 'password123';`
 - In psql run the following to create the dev and test database
-    - `CREATE DATABASE store;`
-    - `CREATE DATABASE store_test;`
+  - `CREATE DATABASE store;`
+  - `CREATE DATABASE store_test;`
 - Connect to the databases and grant all privileges
-    - Grant for dev database
-        - `\c store`
-        - `GRANT ALL PRIVILEGES ON DATABASE store TO storeDB;`
-    - Grant for test database
-        - `\c store_test`
-        - `GRANT ALL PRIVILEGES ON DATABASE store_test TO storeDB;`
-
+  - Grant for dev database
+    - `\c store`
+    - `GRANT ALL PRIVILEGES ON DATABASE store TO storeDB;`
+  - Grant for test database
+    - `\c store_test`
+    - `GRANT ALL PRIVILEGES ON DATABASE store_test TO storeDB;`
 
 Next, you need to run the database migrations:
 
 ```bash
 db-migrate up
 ```
+
 ## Running the application
 
 ```
