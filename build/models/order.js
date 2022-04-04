@@ -54,7 +54,7 @@ var Order = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT orders.id, product_id, products.title, products.price as unit_price,user_id,users.fullname,quantity, (products.price * quantity) as total_price FROM orders INNER join products ON orders.product_id = products.id INNER join users ON orders.user_id = users.id;';
+                        sql = 'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id;';
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
                         result = _a.sent();
@@ -70,41 +70,47 @@ var Order = /** @class */ (function () {
     };
     Order.prototype.show = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, error_2;
+            var conn, sql, result, OrderProducts, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT orders.id, product_id, products.title, products.price as unit_price,user_id,users.fullname,quantity, (products.price * quantity) as total_price FROM orders INNER join products ON orders.product_id = products.id INNER join users ON orders.user_id = users.id WHERE orders.id = $1';
+                        sql = 'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id INNER JOIN order_products ON orders.id = order_products.order_id WHERE orders.id = $1';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
-                        conn.release();
-                        return [2 /*return*/, result.rows[0]];
+                        return [4 /*yield*/, conn.query('SELECT order_products.id,order_products.order_id , order_products.quantity , orders.status , products.title , products.price as unit_price , (products.price * order_products.quantity) as total_price FROM order_products INNER JOIN orders ON order_products.order_id = orders.id INNER JOIN products ON order_products.product_id = products.id WHERE order_products.order_id = $1', [id])];
                     case 3:
+                        OrderProducts = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, {
+                                order: result.rows[0],
+                                products: OrderProducts.rows
+                            }];
+                    case 4:
                         error_2 = _a.sent();
                         throw new Error('Show Method Error ' + error_2);
-                    case 4: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
     Order.prototype.create = function (order) {
         return __awaiter(this, void 0, void 0, function () {
-            var product_id, quantity, user_id, conn, sql, result, error_3;
+            var user_id, status_1, conn, sql, result, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        product_id = order.product_id, quantity = order.quantity, user_id = order.user_id;
+                        user_id = order.user_id, status_1 = order.status;
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'INSERT INTO orders (product_id,quantity,user_id) VALUES ($1,$2,$3) RETURNING *;';
-                        return [4 /*yield*/, conn.query(sql, [product_id, quantity, user_id])];
+                        sql = 'INSERT INTO orders (user_id,status) VALUES ($1,$2) RETURNING *;';
+                        return [4 /*yield*/, conn.query(sql, [user_id, status_1])];
                     case 2:
                         result = _a.sent();
                         conn.release();
@@ -119,13 +125,13 @@ var Order = /** @class */ (function () {
     };
     Order.prototype.update = function (order) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, id, product_id, quantity, user_id, checkIfOrderCount, sql, returnUpdated, error_4;
+            var conn, id, user_id, status, checkIfOrderCount, sql, returnUpdated, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        id = order.id, product_id = order.product_id, quantity = order.quantity, user_id = order.user_id;
+                        id = order.id, user_id = order.user_id, status = order.status;
                         return [4 /*yield*/, conn.query('SELECT * FROM orders WHERE id = $1', [id])];
                     case 2: return [4 /*yield*/, (_a.sent()).rowCount];
                     case 3:
@@ -134,11 +140,11 @@ var Order = /** @class */ (function () {
                         _a.label = 4;
                     case 4:
                         _a.trys.push([4, 7, , 8]);
-                        sql = 'UPDATE orders SET product_id = $1 , quantity = $2 , user_id = $3 WHERE id = $4;';
-                        return [4 /*yield*/, conn.query(sql, [product_id, quantity, user_id, id])];
+                        sql = 'UPDATE orders SET user_id = $1 , status = $2 WHERE id = $3;';
+                        return [4 /*yield*/, conn.query(sql, [user_id, status, id])];
                     case 5:
                         _a.sent();
-                        return [4 /*yield*/, conn.query('SELECT orders.id, product_id, products.title, products.price as unit_price,user_id,users.fullname,quantity, (products.price * quantity) as total_price FROM orders INNER join products ON orders.product_id = products.id INNER join users ON orders.user_id = users.id WHERE orders.id = $1', [id])];
+                        return [4 /*yield*/, conn.query('SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id WHERE orders.id = $1', [id])];
                     case 6:
                         returnUpdated = _a.sent();
                         conn.release();

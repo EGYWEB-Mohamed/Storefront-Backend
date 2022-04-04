@@ -22,9 +22,8 @@ const createOrder = async (req: Request, res: Response) => {
   const validate = await OrderValidator(req.body)
   if (typeof validate == 'boolean') {
     const dataBody: OrderType = {
-      product_id: req.body.product_id,
-      quantity: req.body.quantity,
-      user_id: req.body.user_id
+      user_id: req.body.user_id,
+      status: req.body.status
     }
     const results = await order.create(dataBody)
     res.send(results)
@@ -37,9 +36,8 @@ const updateOrder = async (req: Request, res: Response) => {
   if (typeof validate == 'boolean') {
     const dataBody: OrderType = {
       id: parseInt(req.params.id),
-      product_id: parseInt(req.body.product_id),
-      quantity: parseInt(req.body.quantity),
-      user_id: parseInt(req.body.user_id)
+      user_id: req.body.user_id,
+      status: req.body.status
     }
     const results = await order.update(dataBody)
     if (results) {

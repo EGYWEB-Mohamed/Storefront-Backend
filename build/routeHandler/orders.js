@@ -81,9 +81,8 @@ var createOrder = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 validate = _a.sent();
                 if (!(typeof validate == 'boolean')) return [3 /*break*/, 3];
                 dataBody = {
-                    product_id: req.body.product_id,
-                    quantity: req.body.quantity,
-                    user_id: req.body.user_id
+                    user_id: req.body.user_id,
+                    status: req.body.status
                 };
                 return [4 /*yield*/, order.create(dataBody)];
             case 2:
@@ -107,9 +106,8 @@ var updateOrder = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 if (!(typeof validate == 'boolean')) return [3 /*break*/, 3];
                 dataBody = {
                     id: parseInt(req.params.id),
-                    product_id: parseInt(req.body.product_id),
-                    quantity: parseInt(req.body.quantity),
-                    user_id: parseInt(req.body.user_id)
+                    user_id: req.body.user_id,
+                    status: req.body.status
                 };
                 return [4 /*yield*/, order.update(dataBody)];
             case 2:

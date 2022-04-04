@@ -16,7 +16,13 @@ export type ProductType = {
 
 export type OrderType = {
   id?: number
+  status: string
+  user_id: number
+}
+
+export type OrderProductsType = {
+  id?: number
+  order_id: number
   product_id: number
   quantity: number
-  user_id: number
 }

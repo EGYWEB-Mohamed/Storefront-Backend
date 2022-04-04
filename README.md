@@ -34,6 +34,7 @@ PORT=3000 // App Port
 
 # DB
 POSTGRES_HOST=127.0.0.1 // DB Host
+POSTGRES_DB_PORT=5432 // DB Port
 POSTGRES_DB_NAME= .... // DB Name
 POSTGRES_TEST_DB_NAME= .... // Test DB Name
 POSTGRES_USERNAME= .... // DB Username

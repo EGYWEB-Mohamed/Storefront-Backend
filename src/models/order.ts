@@ -6,7 +6,7 @@ export class Order {
     try {
       const conn = await client.connect()
       const sql =
-        'SELECT orders.id, product_id, products.title, products.price as unit_price,user_id,users.fullname,quantity, (products.price * quantity) as total_price FROM orders INNER join products ON orders.product_id = products.id INNER join users ON orders.user_id = users.id;'
+        'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id;'
       const result = await conn.query(sql)
       conn.release()
       return result.rows
@@ -14,25 +14,31 @@ export class Order {
       throw new Error('Index Method Error ' + error)
     }
   }
-  async show(id: number): Promise<OrderType> {
+  async show(id: number): Promise<OrderType | object> {
     try {
       const conn = await client.connect()
       const sql =
-        'SELECT orders.id, product_id, products.title, products.price as unit_price,user_id,users.fullname,quantity, (products.price * quantity) as total_price FROM orders INNER join products ON orders.product_id = products.id INNER join users ON orders.user_id = users.id WHERE orders.id = $1'
+        'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id INNER JOIN order_products ON orders.id = order_products.order_id WHERE orders.id = $1'
       const result = await conn.query(sql, [id])
+      const OrderProducts = await conn.query(
+        'SELECT order_products.id,order_products.order_id , order_products.quantity , orders.status , products.title , products.price as unit_price , (products.price * order_products.quantity) as total_price FROM order_products INNER JOIN orders ON order_products.order_id = orders.id INNER JOIN products ON order_products.product_id = products.id WHERE order_products.order_id = $1',
+        [id]
+      )
       conn.release()
-      return result.rows[0]
+      return {
+        order: result.rows[0],
+        products: OrderProducts.rows
+      }
     } catch (error) {
       throw new Error('Show Method Error ' + error)
     }
   }
   async create(order: OrderType): Promise<OrderType> {
     try {
-      const { product_id, quantity, user_id } = order
-
+      const { user_id, status } = order
       const conn = await client.connect()
-      const sql = 'INSERT INTO orders (product_id,quantity,user_id) VALUES ($1,$2,$3) RETURNING *;'
-      const result = await conn.query(sql, [product_id, quantity, user_id])
+      const sql = 'INSERT INTO orders (user_id,status) VALUES ($1,$2) RETURNING *;'
+      const result = await conn.query(sql, [user_id, status])
       conn.release()
       return result.rows[0]
     } catch (error) {
@@ -41,17 +47,16 @@ export class Order {
   }
   async update(order: OrderType): Promise<OrderType | boolean> {
     const conn = await client.connect()
-    const { id, product_id, quantity, user_id } = order
+    const { id, user_id, status } = order
     const checkIfOrderCount = await (
       await conn.query('SELECT * FROM orders WHERE id = $1', [id])
     ).rowCount
     if (checkIfOrderCount <= 1) {
       try {
-        const sql =
-          'UPDATE orders SET product_id = $1 , quantity = $2 , user_id = $3 WHERE id = $4;'
-        await conn.query(sql, [product_id, quantity, user_id, id])
+        const sql = 'UPDATE orders SET user_id = $1 , status = $2 WHERE id = $3;'
+        await conn.query(sql, [user_id, status, id])
         const returnUpdated = await conn.query(
-          'SELECT orders.id, product_id, products.title, products.price as unit_price,user_id,users.fullname,quantity, (products.price * quantity) as total_price FROM orders INNER join products ON orders.product_id = products.id INNER join users ON orders.user_id = users.id WHERE orders.id = $1',
+          'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id WHERE orders.id = $1',
           [id]
         )
         conn.release()

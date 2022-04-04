@@ -13,7 +13,9 @@ const request = supertest(app)
 describe('Product Model', () => {
   afterAll(async () => {
     const conn = await client.connect()
-    await conn.query('TRUNCATE products RESTART IDENTITY CASCADE;')
+    await conn.query(
+      'TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;'
+    )
     conn.release()
   })
 

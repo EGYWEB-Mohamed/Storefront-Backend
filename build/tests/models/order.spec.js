@@ -59,7 +59,7 @@ describe('Product Model', function () {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    return [4 /*yield*/, conn.query('TRUNCATE orders RESTART IDENTITY CASCADE;')];
+                    return [4 /*yield*/, conn.query('TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;')];
                 case 2:
                     _a.sent();
                     conn.release();
@@ -86,8 +86,7 @@ describe('Product Model', function () {
     });
     describe('Check Endpoint *API* Access And Functionally', function () {
         var DummyOrderData = {
-            product_id: 1,
-            quantity: 2,
+            status: 'active',
             user_id: 1
         };
         var DummyUserData = {
@@ -102,8 +101,19 @@ describe('Product Model', function () {
         var tempToken = jsonwebtoken_1.default.sign({ user: DummyUserData }, process.env.TOKEN_SECRET);
         var user = new user_1.User();
         var product = new product_1.Product();
-        user.create(DummyUserData);
-        product.create(DummyProductData);
+        beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, user.create(DummyUserData)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, product.create(DummyProductData)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
         it('/api/orders | All Orders', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
@@ -126,6 +136,7 @@ describe('Product Model', function () {
                             .set('Authorization', "Bearer ".concat(tempToken))];
                     case 1:
                         response = _a.sent();
+                        console.log(response.body);
                         expect(response.status).toBe(200);
                         return [2 /*return*/];
                 }
@@ -141,13 +152,6 @@ describe('Product Model', function () {
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
-                        expect(response.body.product_id).toEqual(1);
-                        expect(response.body.title).toBe('Product Title');
-                        expect(parseFloat(response.body.unit_price)).toEqual(5.5);
-                        expect(response.body.user_id).toEqual(1);
-                        expect(response.body.fullname).toBe('Mohamed Saied - Test Env');
-                        expect(response.body.quantity).toEqual(2);
-                        expect(parseFloat(response.body.total_price)).toEqual(11.0);
                         return [2 /*return*/];
                 }
             });
@@ -159,16 +163,14 @@ describe('Product Model', function () {
                     case 0: return [4 /*yield*/, request
                             .put('/api/orders/1')
                             .send({
-                            product_id: 1,
-                            quantity: 5,
+                            status: 'complete',
                             user_id: 1
                         })
                             .set('Authorization', "Bearer ".concat(tempToken))];
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
-                        expect(response.body.quantity).toEqual(5);
-                        expect(parseFloat(response.body.total_price)).toEqual(27.5);
+                        expect(response.body.status).toBe('complete');
                         return [2 /*return*/];
                 }
             });

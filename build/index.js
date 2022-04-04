@@ -29,6 +29,7 @@ var user_1 = __importDefault(require("./routeHandler/user"));
 var product_1 = __importDefault(require("./routeHandler/product"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var orders_1 = __importDefault(require("./routeHandler/orders"));
+var orders_products_1 = __importDefault(require("./routeHandler/orders_products"));
 dotenv.config();
 var PORT = process.env.PORT || 3000;
 // create an instance server
@@ -40,6 +41,7 @@ app.use((0, morgan_1.default)('short'));
 (0, user_1.default)(app);
 (0, product_1.default)(app);
 (0, orders_1.default)(app);
+(0, orders_products_1.default)(app);
 // start express server
 app.listen(PORT, function () {
     console.log("Server Work On 127.0.0.1:".concat(PORT));

@@ -57,7 +57,7 @@ describe('Product Model', function () {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    return [4 /*yield*/, conn.query('TRUNCATE products RESTART IDENTITY CASCADE;')];
+                    return [4 /*yield*/, conn.query('TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;')];
                 case 2:
                     _a.sent();
                     conn.release();

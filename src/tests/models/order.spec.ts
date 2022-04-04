@@ -16,7 +16,9 @@ const request = supertest(app)
 describe('Product Model', () => {
   afterAll(async () => {
     const conn = await client.connect()
-    await conn.query('TRUNCATE orders RESTART IDENTITY CASCADE;')
+    await conn.query(
+      'TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;'
+    )
     conn.release()
   })
 
@@ -39,8 +41,7 @@ describe('Product Model', () => {
   })
   describe('Check Endpoint *API* Access And Functionally', () => {
     const DummyOrderData: OrderType = {
-      product_id: 1,
-      quantity: 2,
+      status: 'active',
       user_id: 1
     }
     const DummyUserData = {
@@ -55,10 +56,10 @@ describe('Product Model', () => {
     const tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
     const user = new User()
     const product = new Product()
-
-    user.create(DummyUserData)
-    product.create(DummyProductData)
-
+    beforeAll(async () => {
+      await user.create(DummyUserData)
+      await product.create(DummyProductData)
+    })
     it('/api/orders | All Orders', async () => {
       const response = await request.get('/api/orders').set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
@@ -68,6 +69,7 @@ describe('Product Model', () => {
         .post('/api/orders')
         .send(DummyOrderData)
         .set('Authorization', `Bearer ${tempToken}`)
+      console.log(response.body)
       expect(response.status).toBe(200)
     })
     it('/api/orders/:id | Show Order', async () => {
@@ -75,26 +77,17 @@ describe('Product Model', () => {
         .get('/api/orders/1')
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
-      expect(response.body.product_id).toEqual(1)
-      expect(response.body.title).toBe('Product Title')
-      expect(parseFloat(response.body.unit_price)).toEqual(5.5)
-      expect(response.body.user_id).toEqual(1)
-      expect(response.body.fullname).toBe('Mohamed Saied - Test Env')
-      expect(response.body.quantity).toEqual(2)
-      expect(parseFloat(response.body.total_price)).toEqual(11.0)
     })
     it('/api/orders/:id | Update Order', async () => {
       const response = await request
         .put('/api/orders/1')
         .send({
-          product_id: 1,
-          quantity: 5,
+          status: 'complete',
           user_id: 1
         })
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
-      expect(response.body.quantity).toEqual(5)
-      expect(parseFloat(response.body.total_price)).toEqual(27.5)
+      expect(response.body.status).toBe('complete')
     })
     it('/api/orders/:id | Delete Order', async () => {
       const response = await request

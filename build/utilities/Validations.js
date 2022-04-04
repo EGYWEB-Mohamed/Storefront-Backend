@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OrderValidator = exports.ProductValidator = exports.userValidator = exports.LoginValidator = void 0;
+exports.OrderProductsValidator = exports.OrderValidator = exports.ProductValidator = exports.userValidator = exports.LoginValidator = void 0;
 var database_1 = __importDefault(require("../database"));
 var LoginValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -69,32 +69,61 @@ var ProductValidator = function (params) { return __awaiter(void 0, void 0, void
 }); };
 exports.ProductValidator = ProductValidator;
 var OrderValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
-    var conn, checkProduct, checkUser;
+    var conn, checkUser, AvailableStatus;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!params.product_id || !params.quantity || !params.user_id) {
-                    return [2 /*return*/, 'Parameter {product_id & quantity & user_id} is Required'];
+                if (!params.user_id || !params.status) {
+                    return [2 /*return*/, 'Parameter {user_id & status} is Required'];
                 }
                 return [4 /*yield*/, database_1.default.connect()];
             case 1:
                 conn = _a.sent();
-                return [4 /*yield*/, conn.query('SELECT * FROM products WHERE id = $1;', [params.product_id])];
-            case 2:
-                checkProduct = (_a.sent()).rowCount;
                 return [4 /*yield*/, conn.query('SELECT * FROM users WHERE id = $1;', [params.user_id])];
-            case 3:
+            case 2:
                 checkUser = (_a.sent())
                     .rowCount;
                 conn.release();
-                if (checkProduct == 0) {
-                    return [2 /*return*/, 'Product With id ' + params.product_id + ' Not Exist'];
-                }
                 if (checkUser == 0) {
                     return [2 /*return*/, 'User With id ' + params.user_id + ' Not Exist'];
+                }
+                AvailableStatus = ['complete', 'active'];
+                if (!AvailableStatus.includes(params.status)) {
+                    return [2 /*return*/, 'Status Should be (active Or complete)'];
                 }
                 return [2 /*return*/, true];
         }
     });
 }); };
 exports.OrderValidator = OrderValidator;
+var OrderProductsValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+    var conn, checkOrder, checkProduct;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!params.order_id || !params.product_id || !params.quantity) {
+                    return [2 /*return*/, 'Parameter {order_id & product_id & quantity} is Required'];
+                }
+                return [4 /*yield*/, database_1.default.connect()];
+            case 1:
+                conn = _a.sent();
+                return [4 /*yield*/, conn.query('SELECT * FROM orders WHERE id = $1;', [params.order_id])];
+            case 2:
+                checkOrder = _a.sent();
+                return [4 /*yield*/, conn.query('SELECT * FROM products WHERE id = $1;', [
+                        params.product_id
+                    ])];
+            case 3:
+                checkProduct = _a.sent();
+                conn.release();
+                if (checkOrder.rowCount == 0) {
+                    return [2 /*return*/, 'Order With id ' + params.order_id + ' Not Exist'];
+                }
+                if (checkProduct.rowCount == 0) {
+                    return [2 /*return*/, 'Product With id ' + params.product_id + ' Not Exist'];
+                }
+                return [2 /*return*/, true];
+        }
+    });
+}); };
+exports.OrderProductsValidator = OrderProductsValidator;
