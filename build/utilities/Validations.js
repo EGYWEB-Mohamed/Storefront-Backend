@@ -35,8 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderValidator = exports.ProductValidator = exports.userValidator = exports.LoginValidator = void 0;
+var database_1 = __importDefault(require("../database"));
 var LoginValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         if (!params.username || !params.password) {
@@ -65,11 +69,32 @@ var ProductValidator = function (params) { return __awaiter(void 0, void 0, void
 }); };
 exports.ProductValidator = ProductValidator;
 var OrderValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+    var conn, checkProduct, checkUser;
     return __generator(this, function (_a) {
-        if (!params.product_id || !params.quantity || !params.user_id) {
-            return [2 /*return*/, 'Parameter {product_id & quantity & user_id} is Required'];
+        switch (_a.label) {
+            case 0:
+                if (!params.product_id || !params.quantity || !params.user_id) {
+                    return [2 /*return*/, 'Parameter {product_id & quantity & user_id} is Required'];
+                }
+                return [4 /*yield*/, database_1.default.connect()];
+            case 1:
+                conn = _a.sent();
+                return [4 /*yield*/, conn.query('SELECT * FROM products WHERE id = $1;', [params.product_id])];
+            case 2:
+                checkProduct = (_a.sent()).rowCount;
+                return [4 /*yield*/, conn.query('SELECT * FROM users WHERE id = $1;', [params.user_id])];
+            case 3:
+                checkUser = (_a.sent())
+                    .rowCount;
+                conn.release();
+                if (checkProduct == 0) {
+                    return [2 /*return*/, 'Product With id ' + params.product_id + ' Not Exist'];
+                }
+                if (checkUser == 0) {
+                    return [2 /*return*/, 'User With id ' + params.user_id + ' Not Exist'];
+                }
+                return [2 /*return*/, true];
         }
-        return [2 /*return*/, true];
     });
 }); };
 exports.OrderValidator = OrderValidator;

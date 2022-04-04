@@ -140,8 +140,8 @@ var deleteProduct = function (req, res) { return __awaiter(void 0, void 0, void 
     });
 }); };
 var product_routes = function (app) {
-    app.get('/api/products', jwt_1.default, indexProduct);
-    app.get('/api/products/:id', jwt_1.default, showProduct);
+    app.get('/api/products', indexProduct);
+    app.get('/api/products/:id', showProduct);
     app.post('/api/products', jwt_1.default, createProduct);
     app.put('/api/products/:id', jwt_1.default, updateProduct);
     app.delete('/api/products/:id', jwt_1.default, deleteProduct);
