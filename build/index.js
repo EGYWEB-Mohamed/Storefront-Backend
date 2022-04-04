@@ -26,7 +26,9 @@ var express_1 = __importDefault(require("express"));
 var morgan_1 = __importDefault(require("morgan"));
 var dotenv = __importStar(require("dotenv"));
 var user_1 = __importDefault(require("./routeHandler/user"));
+var product_1 = __importDefault(require("./routeHandler/product"));
 var body_parser_1 = __importDefault(require("body-parser"));
+var orders_1 = __importDefault(require("./routeHandler/orders"));
 dotenv.config();
 var PORT = process.env.PORT || 3000;
 // create an instance server
@@ -36,6 +38,8 @@ app.use(body_parser_1.default.json());
 app.use((0, morgan_1.default)('short'));
 // add routing for / path
 (0, user_1.default)(app);
+(0, product_1.default)(app);
+(0, orders_1.default)(app);
 // start express server
 app.listen(PORT, function () {
     console.log("Server Work On 127.0.0.1:".concat(PORT));

@@ -39,13 +39,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Product = void 0;
 var database_1 = __importDefault(require("../database"));
-var bcrypt_1 = __importDefault(require("bcrypt"));
-var User = /** @class */ (function () {
-    function User() {
+var Product = /** @class */ (function () {
+    function Product() {
     }
-    User.prototype.index = function () {
+    Product.prototype.index = function () {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, error_1;
             return __generator(this, function (_a) {
@@ -55,7 +54,7 @@ var User = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT * FROM users;';
+                        sql = 'SELECT * FROM products;';
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
                         result = _a.sent();
@@ -69,9 +68,9 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.show = function (id) {
+    Product.prototype.show = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, user, error_2;
+            var conn, sql, result, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -79,16 +78,12 @@ var User = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT * FROM users WHERE id = $1';
+                        sql = 'SELECT * FROM products WHERE id = $1';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
                         conn.release();
-                        user = result.rows[0];
-                        if (typeof user !== 'undefined') {
-                            return [2 /*return*/, user];
-                        }
-                        return [2 /*return*/, false];
+                        return [2 /*return*/, result.rows[0]];
                     case 3:
                         error_2 = _a.sent();
                         throw new Error('Show Method Error ' + error_2);
@@ -97,22 +92,19 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.create = function (user) {
+    Product.prototype.create = function (product) {
         return __awaiter(this, void 0, void 0, function () {
-            var username, password, fullname, pepper, salt, Hash, conn, sql, result, error_3;
+            var title, price, conn, sql, result, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        username = user.username, password = user.password, fullname = user.fullname;
-                        pepper = process.env.BCRYPT_PASSWORD;
-                        salt = parseInt(process.env.SALT_ROUNDS);
-                        Hash = bcrypt_1.default.hashSync(password + pepper, salt);
+                        title = product.title, price = product.price;
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'INSERT INTO users (username,password,fullname) VALUES ($1,$2,$3) RETURNING *;';
-                        return [4 /*yield*/, conn.query(sql, [username, Hash, fullname])];
+                        sql = 'INSERT INTO products (title,price) VALUES ($1,$2) RETURNING *;';
+                        return [4 /*yield*/, conn.query(sql, [title, price])];
                     case 2:
                         result = _a.sent();
                         conn.release();
@@ -125,28 +117,25 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.update = function (user) {
+    Product.prototype.update = function (product) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, id, username, password, fullname, checkIfUserCount, pepper, salt, Hash, sql, result, error_4;
+            var conn, id, title, price, checkIfProductCount, sql, result, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        id = user.id, username = user.username, password = user.password, fullname = user.fullname;
-                        return [4 /*yield*/, conn.query('SELECT * FROM users WHERE id = $1', [id])];
+                        id = product.id, title = product.title, price = product.price;
+                        return [4 /*yield*/, conn.query('SELECT * FROM products WHERE id = $1', [id])];
                     case 2: return [4 /*yield*/, (_a.sent()).rowCount];
                     case 3:
-                        checkIfUserCount = _a.sent();
-                        if (!(checkIfUserCount <= 1)) return [3 /*break*/, 7];
+                        checkIfProductCount = _a.sent();
+                        if (!(checkIfProductCount <= 1)) return [3 /*break*/, 7];
                         _a.label = 4;
                     case 4:
                         _a.trys.push([4, 6, , 7]);
-                        pepper = process.env.BCRYPT_PASSWORD;
-                        salt = parseInt(process.env.SALT_ROUNDS);
-                        Hash = bcrypt_1.default.hashSync(password + pepper, salt);
-                        sql = 'UPDATE users SET username = $1 , password = $2 , fullname = $3 WHERE id = $4 RETURNING *;';
-                        return [4 /*yield*/, conn.query(sql, [username, Hash, fullname, id])];
+                        sql = 'UPDATE products SET title = $1 , price = $2 WHERE id = $3 RETURNING *;';
+                        return [4 /*yield*/, conn.query(sql, [title, price, id])];
                     case 5:
                         result = _a.sent();
                         conn.release();
@@ -159,7 +148,7 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.delete = function (id) {
+    Product.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, error_5;
             return __generator(this, function (_a) {
@@ -169,12 +158,12 @@ var User = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'DELETE FROM users WHERE id = $1';
+                        sql = 'DELETE FROM products WHERE id = $1;';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
                         conn.release();
-                        return [2 /*return*/, 'User Deleted Successfully'];
+                        return [2 /*return*/, 'Product Deleted Successfully'];
                     case 3:
                         error_5 = _a.sent();
                         throw new Error('Delete Method Error ' + error_5);
@@ -183,31 +172,6 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.login = function (ParmsLogin) {
-        return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, user, pepper;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, database_1.default.connect()];
-                    case 1:
-                        conn = _a.sent();
-                        sql = 'SELECT * FROM users WHERE username=($1)';
-                        return [4 /*yield*/, conn.query(sql, [ParmsLogin.username])];
-                    case 2:
-                        result = _a.sent();
-                        conn.release();
-                        user = result.rows[0];
-                        if (typeof user !== 'undefined') {
-                            pepper = process.env.BCRYPT_PASSWORD;
-                            if (bcrypt_1.default.compareSync(ParmsLogin.password + pepper, user.password)) {
-                                return [2 /*return*/, user];
-                            }
-                        }
-                        return [2 /*return*/, false];
-                }
-            });
-        });
-    };
-    return User;
+    return Product;
 }());
-exports.User = User;
+exports.Product = Product;

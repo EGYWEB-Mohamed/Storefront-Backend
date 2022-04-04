@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "db-migrate up --config database.json -e test && npx tsc && cross-env ConnectionType=test jasmine && db-migrate down --config database.json -e test",
+    "test": "db-migrate up --config database.json -e test && npx tsc && cross-env ConnectionType=test jasmine && db-migrate reset --config database.json -e test",
     "dev": "nodemon ./src/index.ts",
     "clean": "rimraf build/",
     "build": "yarn clean && npx tsc",

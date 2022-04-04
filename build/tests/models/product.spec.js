@@ -39,17 +39,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var user_1 = require("../../models/user");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var product_1 = require("../../models/product");
 var supertest_1 = __importDefault(require("supertest"));
 var index_1 = __importDefault(require("../../index"));
 var database_1 = __importDefault(require("../../database"));
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-var user = new user_1.User();
+var product = new product_1.Product();
 // create a request object
 var request = (0, supertest_1.default)(index_1.default);
-describe('User Model', function () {
+describe('Product Model', function () {
     afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         var conn;
         return __generator(this, function (_a) {
@@ -57,7 +57,7 @@ describe('User Model', function () {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    return [4 /*yield*/, conn.query('TRUNCATE users RESTART IDENTITY CASCADE;')];
+                    return [4 /*yield*/, conn.query('TRUNCATE products RESTART IDENTITY CASCADE;')];
                 case 2:
                     _a.sent();
                     conn.release();
@@ -66,51 +66,39 @@ describe('User Model', function () {
         });
     }); });
     describe('Model Methods Check', function () {
-        it('User Index Defined', function () {
-            expect(user.index).toBeDefined();
+        it('Product Index Defined', function () {
+            expect(product.index).toBeDefined();
         });
-        it('User Create Defined', function () {
-            expect(user.create).toBeDefined();
+        it('Product Create Defined', function () {
+            expect(product.create).toBeDefined();
         });
-        it('User Update Defined', function () {
-            expect(user.update).toBeDefined();
+        it('Product Update Defined', function () {
+            expect(product.update).toBeDefined();
         });
-        it('User Show Defined', function () {
-            expect(user.show).toBeDefined();
+        it('Product Show Defined', function () {
+            expect(product.show).toBeDefined();
         });
-        it('User Delete Defined', function () {
-            expect(user.delete).toBeDefined();
-        });
-        it('User Login Defined', function () {
-            expect(user.login).toBeDefined();
+        it('Product Delete Defined', function () {
+            expect(product.delete).toBeDefined();
         });
     });
     describe('Check Endpoint *API* Access And Functionally', function () {
-        var DummyData = {
+        var DummyProductData = {
+            title: 'Product Title',
+            price: 9.99
+        };
+        var DummyUserData = {
             username: 'Test User Name',
             password: '123456',
             fullname: 'Mohamed Saied - Test Env'
         };
-        var tempToken = jsonwebtoken_1.default.sign({ user: DummyData }, process.env.TOKEN_SECRET);
-        it('/api/users | All Users', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get('/api/users').set('Authorization', "Bearer ".concat(tempToken))];
-                    case 1:
-                        response = _a.sent();
-                        expect(response.status).toBe(200);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        it('/api/users | Create User', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var tempToken = jsonwebtoken_1.default.sign({ user: DummyUserData }, process.env.TOKEN_SECRET);
+        it('/api/products | All Products', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, request
-                            .post('/api/users')
-                            .send(DummyData)
+                            .get('/api/products')
                             .set('Authorization', "Bearer ".concat(tempToken))];
                     case 1:
                         response = _a.sent();
@@ -119,45 +107,62 @@ describe('User Model', function () {
                 }
             });
         }); });
-        it('/api/users/:id | Show User', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get('/api/users/1').set('Authorization', "Bearer ".concat(tempToken))];
-                    case 1:
-                        response = _a.sent();
-                        expect(response.status).toBe(200);
-                        expect(response.body.username).toBe('Test User Name');
-                        expect(response.body.fullname).toBe('Mohamed Saied - Test Env');
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        it('/api/users/:id | Update User', function () { return __awaiter(void 0, void 0, void 0, function () {
+        it('/api/products | Create Products', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, request
-                            .put('/api/users/1')
+                            .post('/api/products')
+                            .send(DummyProductData)
+                            .set('Authorization', "Bearer ".concat(tempToken))];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(200);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('/api/products/:id | Show Product', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request
+                            .get('/api/products/1')
+                            .set('Authorization', "Bearer ".concat(tempToken))];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(200);
+                        expect(response.body.title).toBe('Product Title');
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('/api/products/:id | Update Product', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request
+                            .put('/api/products/1')
                             .send({
-                            username: 'Test Name',
-                            password: '123456',
-                            fullname: 'Mohamed'
+                            title: 'Product Title',
+                            price: 4.99
                         })
                             .set('Authorization', "Bearer ".concat(tempToken))];
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
+                        expect(response.body.title).toBe('Product Title');
+                        expect(response.body.price).toBe('4.99');
                         return [2 /*return*/];
                 }
             });
         }); });
-        it('/api/users/:id | Delete User', function () { return __awaiter(void 0, void 0, void 0, function () {
+        it('/api/products/:id | Delete Product', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, request
-                            .delete('/api/users/1')
+                            .delete('/api/products/1')
                             .set('Authorization', "Bearer ".concat(tempToken))];
                     case 1:
                         response = _a.sent();

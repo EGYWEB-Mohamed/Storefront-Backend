@@ -13,13 +13,16 @@ const indexUser = async (req: Request, res: Response) => {
 }
 const showUser = async (req: Request, res: Response) => {
   const results = await user.show(parseInt(req.params.id))
-  res.json(results)
+  if (results) {
+    res.json(results)
+  } else {
+    res.json('Empty')
+  }
 }
 const createUser = async (req: Request, res: Response) => {
   const validate = await userValidator(req.body)
   if (typeof validate == 'boolean') {
     const dataBody: UserType = {
-      id: req.body.id,
       username: req.body.username,
       password: req.body.password,
       fullname: req.body.fullname
@@ -41,8 +44,13 @@ const updateUser = async (req: Request, res: Response) => {
       fullname: req.body.fullname
     }
     const results = await user.update(dataBody)
-    var token = jwt.sign({ user: results }, process.env.TOKEN_SECRET as string)
-    res.send(token)
+    if (results) {
+      var token = jwt.sign({ user: results }, process.env.TOKEN_SECRET as string)
+      res.send(token)
+    } else {
+      res.json('Account Not Found ')
+      return
+    }
   } else {
     res.status(400).json(validate)
   }
@@ -74,13 +82,13 @@ const loginUser = async (req: Request, res: Response) => {
   }
 }
 const user_routes = (app: express.Application) => {
-  app.get('/users', verifyAuthToken, indexUser)
-  app.get('/users/:id', verifyAuthToken, showUser)
-  app.post('/users', verifyAuthToken, createUser)
-  app.put('/users/:id', verifyAuthToken, updateUser)
-  app.delete('/users/:id', verifyAuthToken, deleteUser)
+  app.get('/api/users', verifyAuthToken, indexUser)
+  app.get('/api/users/:id', verifyAuthToken, showUser)
+  app.post('/api/users', verifyAuthToken, createUser)
+  app.put('/api/users/:id', verifyAuthToken, updateUser)
+  app.delete('/api/users/:id', verifyAuthToken, deleteUser)
 
-  app.post('/login', loginUser)
-  app.post('/register', createUser)
+  app.post('/api/login', loginUser)
+  app.post('/api/register', createUser)
 }
 export default user_routes

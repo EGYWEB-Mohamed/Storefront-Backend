@@ -39,16 +39,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var user_1 = require("../models/user");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var product_1 = require("../models/product");
 var jwt_1 = __importDefault(require("../middleware/jwt"));
 var Validations_1 = require("../utilities/Validations");
-var user = new user_1.User();
-var indexUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+var product = new product_1.Product();
+var indexProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var results;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user.index()];
+            case 0: return [4 /*yield*/, product.index()];
             case 1:
                 results = _a.sent();
                 res.json(results);
@@ -56,11 +55,11 @@ var indexUser = function (req, res) { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); };
-var showUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+var showProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var results;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user.show(parseInt(req.params.id))];
+            case 0: return [4 /*yield*/, product.show(parseInt(req.params.id))];
             case 1:
                 results = _a.sent();
                 if (results) {
@@ -73,24 +72,22 @@ var showUser = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
         }
     });
 }); };
-var createUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var validate, dataBody, results, token;
+var createProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var validate, dataBody, results;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, Validations_1.userValidator)(req.body)];
+            case 0: return [4 /*yield*/, (0, Validations_1.ProductValidator)(req.body)];
             case 1:
                 validate = _a.sent();
                 if (!(typeof validate == 'boolean')) return [3 /*break*/, 3];
                 dataBody = {
-                    username: req.body.username,
-                    password: req.body.password,
-                    fullname: req.body.fullname
+                    title: req.body.title,
+                    price: req.body.price
                 };
-                return [4 /*yield*/, user.create(dataBody)];
+                return [4 /*yield*/, product.create(dataBody)];
             case 2:
                 results = _a.sent();
-                token = jsonwebtoken_1.default.sign({ user: results }, process.env.TOKEN_SECRET);
-                res.send(token);
+                res.send(results);
                 return [3 /*break*/, 4];
             case 3:
                 res.status(400).json(validate);
@@ -99,29 +96,27 @@ var createUser = function (req, res) { return __awaiter(void 0, void 0, void 0, 
         }
     });
 }); };
-var updateUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var validate, dataBody, results, token;
+var updateProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var validate, dataBody, results;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, Validations_1.userValidator)(req.body)];
+            case 0: return [4 /*yield*/, (0, Validations_1.ProductValidator)(req.body)];
             case 1:
                 validate = _a.sent();
                 if (!(typeof validate == 'boolean')) return [3 /*break*/, 3];
                 dataBody = {
                     id: parseInt(req.params.id),
-                    username: req.body.username,
-                    password: req.body.password,
-                    fullname: req.body.fullname
+                    title: req.body.title,
+                    price: req.body.price
                 };
-                return [4 /*yield*/, user.update(dataBody)];
+                return [4 /*yield*/, product.update(dataBody)];
             case 2:
                 results = _a.sent();
                 if (results) {
-                    token = jsonwebtoken_1.default.sign({ user: results }, process.env.TOKEN_SECRET);
-                    res.send(token);
+                    res.send(results);
                 }
                 else {
-                    res.json('Account Not Found ');
+                    res.json('Product Not Found');
                     return [2 /*return*/];
                 }
                 return [3 /*break*/, 4];
@@ -132,11 +127,11 @@ var updateUser = function (req, res) { return __awaiter(void 0, void 0, void 0, 
         }
     });
 }); };
-var deleteUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+var deleteProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var results;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user.delete(parseInt(req.params.id))];
+            case 0: return [4 /*yield*/, product.delete(parseInt(req.params.id))];
             case 1:
                 results = _a.sent();
                 res.send(results);
@@ -144,47 +139,11 @@ var deleteUser = function (req, res) { return __awaiter(void 0, void 0, void 0, 
         }
     });
 }); };
-var loginUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var validate, ParmsLogin, results;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, Validations_1.LoginValidator)(req.body)];
-            case 1:
-                validate = _a.sent();
-                if (!(typeof validate == 'boolean')) return [3 /*break*/, 3];
-                ParmsLogin = {
-                    username: req.body.username,
-                    password: req.body.password
-                };
-                return [4 /*yield*/, user.login(ParmsLogin)];
-            case 2:
-                results = _a.sent();
-                if (results) {
-                    res.json({
-                        token: jsonwebtoken_1.default.sign({ user: results }, process.env.TOKEN_SECRET),
-                        user: results
-                    });
-                }
-                else {
-                    res.status(401);
-                    res.json('Account Not Found');
-                    return [2 /*return*/];
-                }
-                return [3 /*break*/, 4];
-            case 3:
-                res.status(400).json(validate);
-                _a.label = 4;
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-var user_routes = function (app) {
-    app.get('/api/users', jwt_1.default, indexUser);
-    app.get('/api/users/:id', jwt_1.default, showUser);
-    app.post('/api/users', jwt_1.default, createUser);
-    app.put('/api/users/:id', jwt_1.default, updateUser);
-    app.delete('/api/users/:id', jwt_1.default, deleteUser);
-    app.post('/api/login', loginUser);
-    app.post('/api/register', createUser);
+var product_routes = function (app) {
+    app.get('/api/products', jwt_1.default, indexProduct);
+    app.get('/api/products/:id', jwt_1.default, showProduct);
+    app.post('/api/products', jwt_1.default, createProduct);
+    app.put('/api/products/:id', jwt_1.default, updateProduct);
+    app.delete('/api/products/:id', jwt_1.default, deleteProduct);
 };
-exports.default = user_routes;
+exports.default = product_routes;

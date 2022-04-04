@@ -36,60 +36,40 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var user_1 = require("../models/user");
-var user = new user_1.User();
-var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var data;
+exports.OrderValidator = exports.ProductValidator = exports.userValidator = exports.LoginValidator = void 0;
+var LoginValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, user.index()];
-            case 1:
-                data = _a.sent();
-                res.json(data);
-                return [2 /*return*/];
+        if (!params.username || !params.password) {
+            return [2 /*return*/, 'Parameter {username & password } is Required'];
         }
+        return [2 /*return*/, true];
     });
 }); };
-var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var data;
+exports.LoginValidator = LoginValidator;
+var userValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, user.show(parseInt(req.params.id))];
-            case 1:
-                data = _a.sent();
-                res.json(data);
-                return [2 /*return*/];
+        if (!params.username || !params.password || !params.fullname) {
+            return [2 /*return*/, 'Parameter {username & password & fullname} is Required'];
         }
+        return [2 /*return*/, true];
     });
 }); };
-var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var data;
+exports.userValidator = userValidator;
+var ProductValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, user.create(req.body)];
-            case 1:
-                data = _a.sent();
-                res.send(data);
-                return [2 /*return*/];
+        if (!params.title || !params.price) {
+            return [2 /*return*/, 'Parameter {title & price} is Required'];
         }
+        return [2 /*return*/, true];
     });
 }); };
-var deleteUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var data;
+exports.ProductValidator = ProductValidator;
+var OrderValidator = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, user.delete(parseInt(req.params.id))];
-            case 1:
-                data = _a.sent();
-                res.send(data);
-                return [2 /*return*/];
+        if (!params.product_id || !params.quantity || !params.user_id) {
+            return [2 /*return*/, 'Parameter {product_id & quantity & user_id} is Required'];
         }
+        return [2 /*return*/, true];
     });
 }); };
-var user_routes = function (app) {
-    app.get('/users', index);
-    app.get('/users/:id', show);
-    app.post('/users', create);
-    app.delete('/users/:id', deleteUser);
-};
-exports.default = user_routes;
+exports.OrderValidator = OrderValidator;
