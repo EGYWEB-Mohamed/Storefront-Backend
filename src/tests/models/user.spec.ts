@@ -4,11 +4,17 @@ import supertest from 'supertest'
 import app from '../../index'
 import client from '../../database'
 import dotenv from 'dotenv'
+import { UserType } from '../../utilities/Types'
 dotenv.config()
 
 const user = new User()
 // create a request object
 const request = supertest(app)
+const DummyData = {
+  username: 'Test User Name',
+  password: '123456',
+  fullname: 'Mohamed Saied - Test Env'
+}
 
 describe('User Model', () => {
   afterAll(async () => {
@@ -43,12 +49,6 @@ describe('User Model', () => {
     })
   })
   describe('Check Endpoint *API* Access And Functionally', () => {
-    const DummyData = {
-      username: 'Test User Name',
-      password: '123456',
-      fullname: 'Mohamed Saied - Test Env'
-    }
-
     const tempToken = jwt.sign({ user: DummyData }, process.env.TOKEN_SECRET as string)
 
     it('/api/users | All Users', async () => {
@@ -86,6 +86,37 @@ describe('User Model', () => {
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
       expect(response.body).toEqual({})
+    })
+  })
+  describe('Test User Model Methods Functionality', () => {
+    const user = new User()
+    it('Method Index', async () => {
+      const result = await user.index()
+      expect(result).toEqual([])
+    })
+    it('Method Create', async () => {
+      const result = await user.create(DummyData)
+      expect(result.username).toBe(DummyData.username)
+      expect(result.fullname).toBe(DummyData.fullname)
+    })
+    it('Method Show', async () => {
+      const result = await user.show(2)
+      expect(result.username).toBe(DummyData.username)
+      expect(result.fullname).toBe(DummyData.fullname)
+    })
+    it('Method Update', async () => {
+      const result = await user.update({
+        id: 2,
+        username: 'Test User',
+        password: '123456',
+        fullname: 'Mohamed'
+      })
+      expect(result.username).toBe('Test User')
+      expect(result.fullname).toBe('Mohamed')
+    })
+    it('Method Delete', async () => {
+      const result = await user.delete(2)
+      expect(result).toBe('User Deleted Successfully')
     })
   })
 })

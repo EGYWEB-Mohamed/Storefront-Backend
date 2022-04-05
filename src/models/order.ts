@@ -14,11 +14,11 @@ export class Order {
       throw new Error('Index Method Error ' + error)
     }
   }
-  async show(id: number): Promise<OrderType | object> {
+  async show(id: number): Promise<OrderType | Object> {
     try {
       const conn = await client.connect()
       const sql =
-        'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id INNER JOIN order_products ON orders.id = order_products.order_id WHERE orders.id = $1'
+        'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id WHERE orders.id = $1'
       const result = await conn.query(sql, [id])
       const OrderProducts = await conn.query(
         'SELECT order_products.id,order_products.order_id , order_products.quantity , orders.status , products.title , products.price as unit_price , (products.price * order_products.quantity) as total_price FROM order_products INNER JOIN orders ON order_products.order_id = orders.id INNER JOIN products ON order_products.product_id = products.id WHERE order_products.order_id = $1',

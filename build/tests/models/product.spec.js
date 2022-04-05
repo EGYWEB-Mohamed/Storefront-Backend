@@ -50,6 +50,15 @@ var product = new product_1.Product();
 // create a request object
 var request = (0, supertest_1.default)(index_1.default);
 describe('Product Model', function () {
+    var DummyProductData = {
+        title: 'Product Title',
+        price: 9.99
+    };
+    var DummyUserData = {
+        username: 'Test User Name',
+        password: '123456',
+        fullname: 'Mohamed Saied - Test Env'
+    };
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         var conn;
         return __generator(this, function (_a) {
@@ -98,15 +107,6 @@ describe('Product Model', function () {
         });
     });
     describe('Check Endpoint *API* Access And Functionally', function () {
-        var DummyProductData = {
-            title: 'Product Title',
-            price: 9.99
-        };
-        var DummyUserData = {
-            username: 'Test User Name',
-            password: '123456',
-            fullname: 'Mohamed Saied - Test Env'
-        };
         var tempToken = jsonwebtoken_1.default.sign({ user: DummyUserData }, process.env.TOKEN_SECRET);
         it('/api/products | All Products', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
@@ -186,6 +186,76 @@ describe('Product Model', function () {
                         response = _a.sent();
                         expect(response.status).toBe(200);
                         expect(response.body).toEqual({});
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+    describe('Test Product Model Methods Functionality', function () {
+        var product = new product_1.Product();
+        it('Method Index', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, product.index()];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toEqual([]);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Create', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, product.create(DummyProductData)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.title).toBe(DummyProductData.title);
+                        expect(parseFloat(result.price)).toBe(DummyProductData.price);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Show', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, product.show(2)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.title).toBe(DummyProductData.title);
+                        expect(parseFloat(result.price)).toEqual(DummyProductData.price);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Update', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, product.update({
+                            id: 2,
+                            title: 'Product',
+                            price: 10
+                        })];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.title).toBe('Product');
+                        expect(parseFloat(result.price)).toEqual(10);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Delete', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, product.delete(2)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toBe('Product Deleted Successfully');
                         return [2 /*return*/];
                 }
             });

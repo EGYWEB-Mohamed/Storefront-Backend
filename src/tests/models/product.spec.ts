@@ -11,18 +11,24 @@ const product = new Product()
 const request = supertest(app)
 
 describe('Product Model', () => {
+  const DummyProductData = {
+    title: 'Product Title',
+    price: 9.99
+  }
+  const DummyUserData = {
+    username: 'Test User Name',
+    password: '123456',
+    fullname: 'Mohamed Saied - Test Env'
+  }
+
   beforeAll(async () => {
     const conn = await client.connect()
-    await conn.query(
-      'TRUNCATE products RESTART IDENTITY CASCADE;'
-    )
+    await conn.query('TRUNCATE products RESTART IDENTITY CASCADE;')
     conn.release()
   })
   afterAll(async () => {
     const conn = await client.connect()
-    await conn.query(
-      'TRUNCATE products RESTART IDENTITY CASCADE;'
-    )
+    await conn.query('TRUNCATE products RESTART IDENTITY CASCADE;')
     conn.release()
   })
 
@@ -44,15 +50,6 @@ describe('Product Model', () => {
     })
   })
   describe('Check Endpoint *API* Access And Functionally', () => {
-    const DummyProductData = {
-      title: 'Product Title',
-      price: 9.99
-    }
-    const DummyUserData = {
-      username: 'Test User Name',
-      password: '123456',
-      fullname: 'Mohamed Saied - Test Env'
-    }
     const tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
 
     it('/api/products | All Products', async () => {
@@ -96,6 +93,36 @@ describe('Product Model', () => {
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
       expect(response.body).toEqual({})
+    })
+  })
+  describe('Test Product Model Methods Functionality', () => {
+    const product = new Product()
+    it('Method Index', async () => {
+      const result = await product.index()
+      expect(result).toEqual([])
+    })
+    it('Method Create', async () => {
+      const result = await product.create(DummyProductData)
+      expect(result.title).toBe(DummyProductData.title)
+      expect(parseFloat(result.price as unknown as string)).toBe(DummyProductData.price)
+    })
+    it('Method Show', async () => {
+      const result = await product.show(2)
+      expect(result.title).toBe(DummyProductData.title)
+      expect(parseFloat(result.price as unknown as string)).toEqual(DummyProductData.price)
+    })
+    it('Method Update', async () => {
+      const result = await product.update({
+        id: 2,
+        title: 'Product',
+        price: 10
+      })
+      expect(result.title).toBe('Product')
+      expect(parseFloat(result.price as unknown as string)).toEqual(10)
+    })
+    it('Method Delete', async () => {
+      const result = await product.delete(2)
+      expect(result).toBe('Product Deleted Successfully')
     })
   })
 })

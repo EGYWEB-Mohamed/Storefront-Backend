@@ -13,17 +13,13 @@ export class User {
       throw new Error('Index Method Error ' + error)
     }
   }
-  async show(id: number): Promise<UserType | boolean> {
+  async show(id: number): Promise<UserType> {
     try {
       const conn = await client.connect()
       const sql = 'SELECT id,username,fullname FROM users WHERE id = $1'
       const result = await conn.query(sql, [id])
       conn.release()
-      const user = result.rows[0]
-      if (typeof user !== 'undefined') {
-        return user
-      }
-      return false
+      return result.rows[0]
     } catch (error) {
       throw new Error('Show Method Error ' + error)
     }
@@ -44,7 +40,7 @@ export class User {
       throw new Error('Create Method Error ' + error)
     }
   }
-  async update(user: UserType): Promise<UserType | boolean> {
+  async update(user: UserType): Promise<UserType> {
     const conn = await client.connect()
     const { id, username, password, fullname } = user
     const checkIfUserCount = await (
@@ -65,7 +61,7 @@ export class User {
         throw new Error('Update Method Error ' + error)
       }
     }
-    return false
+    throw new Error('Not Found')
   }
 
   async delete(id: number): Promise<UserType | string> {

@@ -52,6 +52,19 @@ var order = new order_1.Order();
 // create a request object
 var request = (0, supertest_1.default)(index_1.default);
 describe('Product Model', function () {
+    var DummyOrderData = {
+        status: 'active',
+        user_id: 1
+    };
+    var DummyUserData = {
+        username: 'Test User Name',
+        password: '123456',
+        fullname: 'Mohamed Saied - Test Env'
+    };
+    var DummyProductData = {
+        title: 'Product Title',
+        price: 5.5
+    };
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         var conn;
         return __generator(this, function (_a) {
@@ -100,19 +113,6 @@ describe('Product Model', function () {
         });
     });
     describe('Check Endpoint *API* Access And Functionally', function () {
-        var DummyOrderData = {
-            status: 'active',
-            user_id: 1
-        };
-        var DummyUserData = {
-            username: 'Test User Name',
-            password: '123456',
-            fullname: 'Mohamed Saied - Test Env'
-        };
-        var DummyProductData = {
-            title: 'Product Title',
-            price: 5.5
-        };
         var tempToken = jsonwebtoken_1.default.sign({ user: DummyUserData }, process.env.TOKEN_SECRET);
         var user = new user_1.User();
         var product = new product_1.Product();
@@ -203,6 +203,74 @@ describe('Product Model', function () {
                         response = _a.sent();
                         expect(response.status).toBe(200);
                         expect(response.body).toEqual({});
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+    describe('Test Order Model Methods Functionality', function () {
+        var order = new order_1.Order();
+        it('Method Index', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, order.index()];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toEqual([]);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Create', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, order.create(DummyOrderData)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.status).toBe(DummyOrderData.status);
+                        expect(result.user_id).toBe(DummyOrderData.user_id);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Show', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, order.show(2)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toBeTruthy();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Update', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, order.update({
+                            id: 2,
+                            status: 'complete',
+                            user_id: 1
+                        })];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toBeTruthy();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Delete', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, order.delete(2)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toBe('Order Deleted Successfully');
                         return [2 /*return*/];
                 }
             });

@@ -14,6 +14,19 @@ const order = new Order()
 const request = supertest(app)
 
 describe('Product Model', () => {
+  const DummyOrderData: OrderType = {
+    status: 'active',
+    user_id: 1
+  }
+  const DummyUserData = {
+    username: 'Test User Name',
+    password: '123456',
+    fullname: 'Mohamed Saied - Test Env'
+  }
+  const DummyProductData = {
+    title: 'Product Title',
+    price: 5.5
+  }
   beforeAll(async () => {
     const conn = await client.connect()
     await conn.query('TRUNCATE orders RESTART IDENTITY CASCADE;')
@@ -43,19 +56,6 @@ describe('Product Model', () => {
     })
   })
   describe('Check Endpoint *API* Access And Functionally', () => {
-    const DummyOrderData: OrderType = {
-      status: 'active',
-      user_id: 1
-    }
-    const DummyUserData = {
-      username: 'Test User Name',
-      password: '123456',
-      fullname: 'Mohamed Saied - Test Env'
-    }
-    const DummyProductData = {
-      title: 'Product Title',
-      price: 5.5
-    }
     const tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
     const user = new User()
     const product = new Product()
@@ -100,6 +100,34 @@ describe('Product Model', () => {
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
       expect(response.body).toEqual({})
+    })
+  })
+  describe('Test Order Model Methods Functionality', () => {
+    const order = new Order()
+    it('Method Index', async () => {
+      const result = await order.index()
+      expect(result).toEqual([])
+    })
+    it('Method Create', async () => {
+      const result = await order.create(DummyOrderData)
+      expect(result.status).toBe(DummyOrderData.status)
+      expect(result.user_id).toBe(DummyOrderData.user_id)
+    })
+    it('Method Show', async () => {
+      const result = await order.show(2)
+      expect(result).toBeTruthy()
+    })
+    it('Method Update', async () => {
+      const result = await order.update({
+        id: 2,
+        status: 'complete',
+        user_id: 1
+      })
+      expect(result).toBeTruthy()
+    })
+    it('Method Delete', async () => {
+      const result = await order.delete(2)
+      expect(result).toBe('Order Deleted Successfully')
     })
   })
 })

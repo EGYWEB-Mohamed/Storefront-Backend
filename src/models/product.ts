@@ -37,7 +37,7 @@ export class Product {
       throw new Error('Create Method Error ' + error)
     }
   }
-  async update(product: ProductType): Promise<ProductType | boolean> {
+  async update(product: ProductType): Promise<ProductType> {
     const conn = await client.connect()
     const { id, title, price } = product
     const checkIfProductCount = await (
@@ -53,7 +53,7 @@ export class Product {
         throw new Error('Update Method Error ' + error)
       }
     }
-    return false
+    throw new Error('Not Found')
   }
 
   async delete(id: number): Promise<ProductType | string> {

@@ -118,4 +118,36 @@ describe('Order Products Model', () => {
       expect(response.body).toEqual({})
     })
   })
+  describe('Test Order Products Model Methods Functionality', () => {
+    const orderProducts = new OrderProducts()
+    it('Method Index', async () => {
+      const result = await orderProducts.index()
+      expect(result).toEqual([])
+    })
+    it('Method Create', async () => {
+      const result = await orderProducts.create(DummyOrderProductData)
+      expect(result.order_id).toBe(DummyOrderProductData.order_id)
+      expect(result.product_id).toBe(DummyOrderProductData.product_id)
+      expect(result.quantity).toBe(DummyOrderProductData.quantity)
+    })
+    it('Method Show', async () => {
+      const result = await orderProducts.show(2)
+      expect(result.quantity).toBe(DummyOrderProductData.quantity)
+      expect(result).toBeTruthy()
+    })
+    it('Method Update', async () => {
+      const result = await orderProducts.update({
+        id: 2,
+        order_id: 1,
+        product_id: 1,
+        quantity: 5
+      })
+      expect(result.quantity).toBe(5)
+      expect(result).toBeTruthy()
+    })
+    it('Method Delete', async () => {
+      const result = await orderProducts.delete(2)
+      expect(result).toBe('Order Product Deleted Successfully')
+    })
+  })
 })

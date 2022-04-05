@@ -78,7 +78,7 @@ var Order = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id INNER JOIN order_products ON orders.id = order_products.order_id WHERE orders.id = $1';
+                        sql = 'SELECT orders.id , status , users.username , users.fullname from orders INNER JOIN users ON orders.user_id = users.id WHERE orders.id = $1';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();

@@ -49,6 +49,11 @@ dotenv_1.default.config();
 var user = new user_1.User();
 // create a request object
 var request = (0, supertest_1.default)(index_1.default);
+var DummyData = {
+    username: 'Test User Name',
+    password: '123456',
+    fullname: 'Mohamed Saied - Test Env'
+};
 describe('User Model', function () {
     afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         var conn;
@@ -101,11 +106,6 @@ describe('User Model', function () {
         });
     });
     describe('Check Endpoint *API* Access And Functionally', function () {
-        var DummyData = {
-            username: 'Test User Name',
-            password: '123456',
-            fullname: 'Mohamed Saied - Test Env'
-        };
         var tempToken = jsonwebtoken_1.default.sign({ user: DummyData }, process.env.TOKEN_SECRET);
         it('/api/users | All Users', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
@@ -179,6 +179,77 @@ describe('User Model', function () {
                         response = _a.sent();
                         expect(response.status).toBe(200);
                         expect(response.body).toEqual({});
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+    describe('Test User Model Methods Functionality', function () {
+        var user = new user_1.User();
+        it('Method Index', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, user.index()];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toEqual([]);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Create', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, user.create(DummyData)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.username).toBe(DummyData.username);
+                        expect(result.fullname).toBe(DummyData.fullname);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Show', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, user.show(2)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.username).toBe(DummyData.username);
+                        expect(result.fullname).toBe(DummyData.fullname);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Update', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, user.update({
+                            id: 2,
+                            username: 'Test User',
+                            password: '123456',
+                            fullname: 'Mohamed'
+                        })];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.username).toBe('Test User');
+                        expect(result.fullname).toBe('Mohamed');
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it('Method Delete', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, user.delete(2)];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toBe('User Deleted Successfully');
                         return [2 /*return*/];
                 }
             });

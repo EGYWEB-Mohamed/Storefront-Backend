@@ -71,7 +71,7 @@ var User = /** @class */ (function () {
     };
     User.prototype.show = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, user, error_2;
+            var conn, sql, result, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -84,11 +84,7 @@ var User = /** @class */ (function () {
                     case 2:
                         result = _a.sent();
                         conn.release();
-                        user = result.rows[0];
-                        if (typeof user !== 'undefined') {
-                            return [2 /*return*/, user];
-                        }
-                        return [2 /*return*/, false];
+                        return [2 /*return*/, result.rows[0]];
                     case 3:
                         error_2 = _a.sent();
                         throw new Error('Show Method Error ' + error_2);
@@ -154,7 +150,7 @@ var User = /** @class */ (function () {
                     case 6:
                         error_4 = _a.sent();
                         throw new Error('Update Method Error ' + error_4);
-                    case 7: return [2 /*return*/, false];
+                    case 7: throw new Error('Not Found');
                 }
             });
         });

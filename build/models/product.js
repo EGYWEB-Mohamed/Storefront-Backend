@@ -143,7 +143,7 @@ var Product = /** @class */ (function () {
                     case 6:
                         error_4 = _a.sent();
                         throw new Error('Update Method Error ' + error_4);
-                    case 7: return [2 /*return*/, false];
+                    case 7: throw new Error('Not Found');
                 }
             });
         });

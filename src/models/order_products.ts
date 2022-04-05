@@ -39,7 +39,7 @@ export class OrderProducts {
       throw new Error('Create Method Error ' + error)
     }
   }
-  async update(orderProducts: OrderProductsType): Promise<OrderProductsType | boolean> {
+  async update(orderProducts: OrderProductsType): Promise<OrderProductsType> {
     const conn = await client.connect()
     const { id, order_id, product_id, quantity } = orderProducts
     const checkIfOrderProductsCount = await (
@@ -60,7 +60,7 @@ export class OrderProducts {
         throw new Error('Update Method Error ' + error)
       }
     }
-    return false
+    throw new Error('Order Product Not Found')
   }
 
   async delete(id: number): Promise<OrderProductsType | string> {
