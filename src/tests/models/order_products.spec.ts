@@ -33,17 +33,7 @@ describe('Order Products Model', () => {
     product_id: 1,
     quantity: 2
   }
-  const tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
 
-  beforeAll(async () => {
-    const user = new User()
-    const product = new Product()
-    const order = new Order()
-
-    user.create(DummyUserData)
-    product.create(DummyProductData)
-    order.create(DummyOrderData)
-  })
   afterAll(async () => {
     const conn = await client.connect()
     await conn.query(
@@ -70,6 +60,18 @@ describe('Order Products Model', () => {
     })
   })
   describe('Check Endpoint *API* Access And Functionally', () => {
+    const tempToken = jwt.sign({ user: DummyUserData }, process.env.TOKEN_SECRET as string)
+
+    beforeAll(async () => {
+      const user = new User()
+      const product = new Product()
+      const order = new Order()
+
+      await user.create(DummyUserData)
+      await product.create(DummyProductData)
+      await order.create(DummyOrderData)
+    })
+
     it('/api/order-products | All Order Products', async () => {
       const response = await request
         .get('/api/order-products')
@@ -83,13 +85,13 @@ describe('Order Products Model', () => {
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
     })
-    it('/api/order-products/:id | Show Order', async () => {
+    it('/api/order-products/:id | Show Order Products', async () => {
       const response = await request
         .get('/api/order-products/1')
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
     })
-    it('/api/order-products/:id | Update Order', async () => {
+    it('/api/order-products/:id | Update Order Products', async () => {
       const response = await request
         .put('/api/order-products/1')
         .send({
@@ -98,7 +100,6 @@ describe('Order Products Model', () => {
           quantity: 5
         })
         .set('Authorization', `Bearer ${tempToken}`)
-      console.log(response.body)
       expect(response.status).toBe(200)
     })
     it('/api/order-products/:id | Delete Order', async () => {

@@ -45,22 +45,31 @@ var jwt_1 = __importDefault(require("../middleware/jwt"));
 var Validations_1 = require("../utilities/Validations");
 var user = new user_1.User();
 var indexUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var results;
+    var results, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user.index()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, user.index()];
             case 1:
                 results = _a.sent();
                 res.json(results);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                res.send(error_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 var showUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var results;
+    var results, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user.show(parseInt(req.params.id))];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, user.show(parseInt(req.params.id))];
             case 1:
                 results = _a.sent();
                 if (results) {
@@ -69,15 +78,22 @@ var showUser = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                 else {
                     res.json('Empty');
                 }
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _a.sent();
+                res.send(error_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 var createUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var validate, dataBody, results, token;
+    var validate, dataBody, results, token, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, Validations_1.userValidator)(req.body)];
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                return [4 /*yield*/, (0, Validations_1.userValidator)(req.body)];
             case 1:
                 validate = _a.sent();
                 if (!(typeof validate == 'boolean')) return [3 /*break*/, 3];
@@ -95,15 +111,22 @@ var createUser = function (req, res) { return __awaiter(void 0, void 0, void 0, 
             case 3:
                 res.status(400).json(validate);
                 _a.label = 4;
-            case 4: return [2 /*return*/];
+            case 4: return [3 /*break*/, 6];
+            case 5:
+                error_3 = _a.sent();
+                res.send(error_3);
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); };
 var updateUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var validate, dataBody, results, token;
+    var validate, dataBody, results, token, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, Validations_1.userValidator)(req.body)];
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                return [4 /*yield*/, (0, Validations_1.userValidator)(req.body)];
             case 1:
                 validate = _a.sent();
                 if (!(typeof validate == 'boolean')) return [3 /*break*/, 3];
@@ -128,27 +151,41 @@ var updateUser = function (req, res) { return __awaiter(void 0, void 0, void 0, 
             case 3:
                 res.status(400).json(validate);
                 _a.label = 4;
-            case 4: return [2 /*return*/];
+            case 4: return [3 /*break*/, 6];
+            case 5:
+                error_4 = _a.sent();
+                res.send(error_4);
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); };
 var deleteUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var results;
+    var results, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, user.delete(parseInt(req.params.id))];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, user.delete(parseInt(req.params.id))];
             case 1:
                 results = _a.sent();
                 res.send(results);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                error_5 = _a.sent();
+                res.send(error_5);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 var loginUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var validate, ParmsLogin, results;
+    var validate, ParmsLogin, results, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, Validations_1.LoginValidator)(req.body)];
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                return [4 /*yield*/, (0, Validations_1.LoginValidator)(req.body)];
             case 1:
                 validate = _a.sent();
                 if (!(typeof validate == 'boolean')) return [3 /*break*/, 3];
@@ -174,7 +211,12 @@ var loginUser = function (req, res) { return __awaiter(void 0, void 0, void 0, f
             case 3:
                 res.status(400).json(validate);
                 _a.label = 4;
-            case 4: return [2 /*return*/];
+            case 4: return [3 /*break*/, 6];
+            case 5:
+                error_6 = _a.sent();
+                res.send(error_6);
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); };
