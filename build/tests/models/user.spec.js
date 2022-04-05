@@ -57,7 +57,22 @@ describe('User Model', function () {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    return [4 /*yield*/, conn.query('TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;')];
+                    return [4 /*yield*/, conn.query('TRUNCATE users RESTART IDENTITY CASCADE;')];
+                case 2:
+                    _a.sent();
+                    conn.release();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        var conn;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, database_1.default.connect()];
+                case 1:
+                    conn = _a.sent();
+                    return [4 /*yield*/, conn.query('TRUNCATE users RESTART IDENTITY CASCADE;')];
                 case 2:
                     _a.sent();
                     conn.release();
@@ -100,6 +115,7 @@ describe('User Model', function () {
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
+                        expect(response.body).toEqual([]);
                         return [2 /*return*/];
                 }
             });
@@ -162,6 +178,7 @@ describe('User Model', function () {
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
+                        expect(response.body).toEqual({});
                         return [2 /*return*/];
                 }
             });

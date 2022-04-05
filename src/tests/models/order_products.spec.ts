@@ -33,12 +33,14 @@ describe('Order Products Model', () => {
     product_id: 1,
     quantity: 2
   }
-
+  beforeAll(async () => {
+    const conn = await client.connect()
+    await conn.query('TRUNCATE order_products RESTART IDENTITY CASCADE;')
+    conn.release()
+  })
   afterAll(async () => {
     const conn = await client.connect()
-    await conn.query(
-      'TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;'
-    )
+    await conn.query('TRUNCATE order_products RESTART IDENTITY CASCADE;')
     conn.release()
   })
 
@@ -77,6 +79,7 @@ describe('Order Products Model', () => {
         .get('/api/order-products')
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body).toEqual([])
     })
     it('/api/order-products | Create Order Products', async () => {
       const response = await request
@@ -84,6 +87,9 @@ describe('Order Products Model', () => {
         .send(DummyOrderProductData)
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body.order_id).toEqual(DummyOrderProductData.order_id)
+      expect(response.body.product_id).toEqual(DummyOrderProductData.product_id)
+      expect(response.body.quantity).toEqual(DummyOrderProductData.quantity)
     })
     it('/api/order-products/:id | Show Order Products', async () => {
       const response = await request
@@ -101,12 +107,15 @@ describe('Order Products Model', () => {
         })
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body.quantity).toEqual(5)
+      expect(response.body.order_id).toEqual(1)
     })
     it('/api/order-products/:id | Delete Order', async () => {
       const response = await request
         .delete('/api/order-products/1')
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body).toEqual({})
     })
   })
 })

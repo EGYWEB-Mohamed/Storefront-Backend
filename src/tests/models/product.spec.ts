@@ -11,10 +11,17 @@ const product = new Product()
 const request = supertest(app)
 
 describe('Product Model', () => {
+  beforeAll(async () => {
+    const conn = await client.connect()
+    await conn.query(
+      'TRUNCATE products RESTART IDENTITY CASCADE;'
+    )
+    conn.release()
+  })
   afterAll(async () => {
     const conn = await client.connect()
     await conn.query(
-      'TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;'
+      'TRUNCATE products RESTART IDENTITY CASCADE;'
     )
     conn.release()
   })
@@ -53,6 +60,7 @@ describe('Product Model', () => {
         .get('/api/products')
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body).toEqual([])
     })
     it('/api/products | Create Products', async () => {
       const response = await request
@@ -60,6 +68,8 @@ describe('Product Model', () => {
         .send(DummyProductData)
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body.title).toEqual(DummyProductData.title)
+      expect(parseFloat(response.body.price)).toEqual(DummyProductData.price)
     })
     it('/api/products/:id | Show Product', async () => {
       const response = await request
@@ -78,13 +88,14 @@ describe('Product Model', () => {
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
       expect(response.body.title).toBe('Product Title')
-      expect(response.body.price).toBe('4.99')
+      expect(parseFloat(response.body.price)).toEqual(4.99)
     })
     it('/api/products/:id | Delete Product', async () => {
       const response = await request
         .delete('/api/products/1')
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body).toEqual({})
     })
   })
 })

@@ -50,6 +50,21 @@ var product = new product_1.Product();
 // create a request object
 var request = (0, supertest_1.default)(index_1.default);
 describe('Product Model', function () {
+    beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        var conn;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, database_1.default.connect()];
+                case 1:
+                    conn = _a.sent();
+                    return [4 /*yield*/, conn.query('TRUNCATE products RESTART IDENTITY CASCADE;')];
+                case 2:
+                    _a.sent();
+                    conn.release();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         var conn;
         return __generator(this, function (_a) {
@@ -57,7 +72,7 @@ describe('Product Model', function () {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    return [4 /*yield*/, conn.query('TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;')];
+                    return [4 /*yield*/, conn.query('TRUNCATE products RESTART IDENTITY CASCADE;')];
                 case 2:
                     _a.sent();
                     conn.release();
@@ -103,6 +118,7 @@ describe('Product Model', function () {
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
+                        expect(response.body).toEqual([]);
                         return [2 /*return*/];
                 }
             });
@@ -118,6 +134,8 @@ describe('Product Model', function () {
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
+                        expect(response.body.title).toEqual(DummyProductData.title);
+                        expect(parseFloat(response.body.price)).toEqual(DummyProductData.price);
                         return [2 /*return*/];
                 }
             });
@@ -152,7 +170,7 @@ describe('Product Model', function () {
                         response = _a.sent();
                         expect(response.status).toBe(200);
                         expect(response.body.title).toBe('Product Title');
-                        expect(response.body.price).toBe('4.99');
+                        expect(parseFloat(response.body.price)).toEqual(4.99);
                         return [2 /*return*/];
                 }
             });
@@ -167,6 +185,7 @@ describe('Product Model', function () {
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
+                        expect(response.body).toEqual({});
                         return [2 /*return*/];
                 }
             });

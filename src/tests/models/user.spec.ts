@@ -13,9 +13,12 @@ const request = supertest(app)
 describe('User Model', () => {
   afterAll(async () => {
     const conn = await client.connect()
-    await conn.query(
-      'TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;'
-    )
+    await conn.query('TRUNCATE users RESTART IDENTITY CASCADE;')
+    conn.release()
+  })
+  beforeAll(async () => {
+    const conn = await client.connect()
+    await conn.query('TRUNCATE users RESTART IDENTITY CASCADE;')
     conn.release()
   })
 
@@ -51,6 +54,7 @@ describe('User Model', () => {
     it('/api/users | All Users', async () => {
       const response = await request.get('/api/users').set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body).toEqual([])
     })
     it('/api/users | Create User', async () => {
       const response = await request
@@ -81,6 +85,7 @@ describe('User Model', () => {
         .delete('/api/users/1')
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body).toEqual({})
     })
   })
 })

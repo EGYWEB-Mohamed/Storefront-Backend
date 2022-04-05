@@ -14,11 +14,14 @@ const order = new Order()
 const request = supertest(app)
 
 describe('Product Model', () => {
+  beforeAll(async () => {
+    const conn = await client.connect()
+    await conn.query('TRUNCATE orders RESTART IDENTITY CASCADE;')
+    conn.release()
+  })
   afterAll(async () => {
     const conn = await client.connect()
-    await conn.query(
-      'TRUNCATE order_Products RESTART IDENTITY CASCADE;TRUNCATE users RESTART IDENTITY CASCADE;TRUNCATE products RESTART IDENTITY CASCADE;TRUNCATE order_products RESTART IDENTITY CASCADE;'
-    )
+    await conn.query('TRUNCATE orders RESTART IDENTITY CASCADE;')
     conn.release()
   })
 
@@ -63,14 +66,16 @@ describe('Product Model', () => {
     it('/api/orders | All Orders', async () => {
       const response = await request.get('/api/orders').set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body).toEqual([])
     })
     it('/api/orders | Create Orders', async () => {
       const response = await request
         .post('/api/orders')
         .send(DummyOrderData)
         .set('Authorization', `Bearer ${tempToken}`)
-      console.log(response.body)
       expect(response.status).toBe(200)
+      expect(response.body.status).toEqual(DummyOrderData.status)
+      expect(response.body.user_id).toEqual(DummyOrderData.user_id)
     })
     it('/api/orders/:id | Show Order', async () => {
       const response = await request
@@ -94,6 +99,7 @@ describe('Product Model', () => {
         .delete('/api/orders/1')
         .set('Authorization', `Bearer ${tempToken}`)
       expect(response.status).toBe(200)
+      expect(response.body).toEqual({})
     })
   })
 })
